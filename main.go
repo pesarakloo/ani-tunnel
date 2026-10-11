@@ -1,0 +1,142 @@
+package main
+
+import (
+	"context"
+	"flag"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/pesarakloo/ani-tunnel/cmd"
+	"github.com/pesarakloo/ani-tunnel/internal/app"
+	"github.com/pesarakloo/ani-tunnel/internal/cli"
+	"github.com/pesarakloo/ani-tunnel/internal/localproxy"
+	"github.com/pesarakloo/ani-tunnel/internal/manage"
+	"github.com/pesarakloo/ani-tunnel/internal/menu"
+	"github.com/pesarakloo/ani-tunnel/internal/monitor"
+	"github.com/pesarakloo/ani-tunnel/internal/telegram"
+	"github.com/pesarakloo/ani-tunnel/internal/utils"
+	"github.com/pesarakloo/ani-tunnel/internal/webui"
+)
+
+var logger = utils.NewLogger("info")
+
+// main has two modes:
+//
+//   - Engine mode:  `backpack -c /etc/backpack/<name>.toml`
+//     Runs a single tunnel (server or client). This is what the systemd
+//     units execute. Behaviour is identical to the original engine.
+//
+//   - Menu mode:    `backpack`  (no arguments)
+//     Opens the interactive management CLI on the VPS.
+func main() {
+	// Handled before the flags, because it is a subcommand with flags of its
+	// own: `ani-tunnel node setup --panel ... --key ...`. The flag package would
+	// stop at "node" and report the rest as unknown.
+	if len(os.Args) > 1 && os.Args[1] == "node" {
+		runNode(os.Args[2:])
+		return
+	}
+
+	// The non-interactive commands, for the same reason and in the same place:
+	// they are subcommands with arguments of their own, and the flag package
+	// would stop at the first one and report the rest as unknown.
+	//
+	// Everything they do is in internal/cli, which returns what to print and
+	// what to exit with rather than doing either — so the whole surface is
+	// testable without a process. This is the only part that needs one.
+	if len(os.Args) > 1 && cli.IsCommand(os.Args[1]) {
+		cli.EngineCheck = cmd.CheckConfigFile
+		if st, err := os.Stdout.Stat(); err == nil && st.Mode()&os.ModeCharDevice != 0 {
+			cli.Color = os.Getenv("NO_COLOR") == ""
+			cli.Progress = func(s string) { fmt.Print(s) }
+		}
+		r := cli.Run(os.Args[1:])
+		if r.Out != "" {
+			fmt.Print(r.Out)
+		}
+		if r.Err != "" {
+			fmt.Fprint(os.Stderr, r.Err)
+		}
+		os.Exit(r.Code)
+	}
+
+	configPath := flag.String("c", "", "path to a tunnel configuration file (TOML) — runs in engine mode")
+	showVersion := flag.Bool("v", false, "print the version and exit")
+	restartAll := flag.Bool("restart-all", false, "restart every configured tunnel and exit (used by the auto-refresh job)")
+	tgReport := flag.Bool("telegram-report", false, "send a Telegram status report and exit (used by the scheduled job)")
+	webPanel := flag.Bool("webui", false, "run the web panel (used by the backpack-webui service)")
+	monitorMode := flag.Bool("monitor", false, "run the watchdog, Telegram bot and alerts (used by the backpack-monitor service)")
+	proxyMode := flag.Bool("proxy", false, "run the built-in SOCKS5/HTTP proxy (used by the backpack-proxy service)")
+	flag.Parse()
+
+	switch {
+	case *showVersion:
+		fmt.Println(app.Version)
+		fmt.Println(app.SourceURL)
+		return
+	case *restartAll:
+		ok, failed := manage.RestartAll()
+		fmt.Printf("restarted %d tunnels, %d failed\n", ok, failed)
+		return
+	case *tgReport:
+		if err := telegram.SendStatusNow(); err != nil {
+			logger.Errorf("telegram report failed: %v", err)
+			os.Exit(1)
+		}
+		return
+	case *webPanel:
+		if err := webui.Serve(); err != nil {
+			logger.Fatalf("web panel failed: %v", err)
+		}
+		return
+	case *monitorMode:
+		monitor.Run()
+		return
+	case *proxyMode:
+		runProxy()
+		return
+	}
+
+	// No config file -> interactive menu.
+	if *configPath == "" {
+		menu.Run()
+		return
+	}
+
+	runEngine(*configPath)
+}
+
+// runProxy runs the built-in proxy until a termination signal arrives. The
+// proxy is a plain loopback service; the tunnel forwards to it like any backend.
+func runProxy() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+	go localproxy.Run(ctx)
+	<-sigChan
+	cancel()
+	logger.Info("ani-tunnel proxy stopped")
+}
+
+// runEngine starts a single tunnel from a TOML config and blocks until a
+// termination signal arrives, then shuts down gracefully.
+func runEngine(configPath string) {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		cmd.Run(configPath, ctx)
+	}()
+
+	<-sigChan
+	cancel()
+	<-done
+	logger.Info("backpack engine stopped")
+}
