@@ -12,7 +12,7 @@ on:
   push:
     tags: ["v*"]
     branches: [main]
-    paths: [VERSION]
+    paths: [VERSION, Makefile, .github/workflows/release.yml]
   workflow_dispatch:
     inputs:
       tag:

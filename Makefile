@@ -12,7 +12,7 @@ tidy:
 # Sync the raw VERSION file (used by the updater's mirror path) with the
 # app.Version constant, so they can never drift.
 version:
-	@grep -oE 'Version = "[^"]+"' internal/app/app.go | grep -oE 'v[0-9.]+' > VERSION
+	@sed -nE 's/^[[:space:]]*Version[[:space:]]*=[[:space:]]*"(v[0-9.]+)".*/\1/p' internal/app/app.go > VERSION
 	@echo "VERSION -> $$(cat VERSION)"
 
 build: tidy

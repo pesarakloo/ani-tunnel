@@ -309,7 +309,7 @@ jobs:
         # had drifted. A guard that cannot fire is worse than no guard, because
         # it is read as one.
         run: |
-          embedded="$(grep -oE 'Version = "v[0-9.]+"' internal/app/app.go | grep -oE 'v[0-9.]+')"
+          embedded="$(sed -nE 's/^[[:space:]]*Version[[:space:]]*=[[:space:]]*"(v[0-9.]+)".*/\1/p' internal/app/app.go)"
           declared="$(tr -d ' \n' < VERSION)"
           echo "embedded=$embedded declared=$declared"
           if [ "$embedded" != "$declared" ]; then

@@ -2,7 +2,7 @@
 
 Keep VERSION and internal/app/app.go in step. The initial fork release is v1.9.1, based on upstream v1.9.0. Run the tests in VALIDATION.md before publishing.
 
-The Release workflow runs when VERSION changes on main, when a v* tag is pushed, or manually. It tests, cross-builds all supported Linux architectures and publishes archives, install.sh, SHA256SUMS, and the build's module inventory. Version changes must use a new tag; never replace a published tag with different code.
+The Release workflow runs when VERSION or the release tooling (Makefile / release.yml) changes on main, when a v* tag is pushed, or manually. It tests, cross-builds all supported Linux architectures and publishes archives, install.sh, SHA256SUMS, and the build's module inventory. Version changes must use a new tag; never replace a published tag with different code. A tooling repair before the first successful publication can retry the same version; an existing tag pointing at different source is refused.
 
 Archives are named ani-tunnel_linux_<architecture>.tar.gz. Their executable is named backpack to retain compatibility with existing systemd units and the updater. The installer exposes the ani-tunnel command alias.
 
