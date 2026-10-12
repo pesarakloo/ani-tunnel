@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/pesarakloo/ani-tunnel/internal/app"
 	"time"
 
 	"github.com/pesarakloo/ani-tunnel/config"
@@ -21,7 +22,7 @@ import (
 // are kept. It must survive restarts: re-issuing works, but doing it repeatedly
 // runs into Let's Encrypt's rate limits, and then the tunnel has no
 // certificate at all until the limit resets.
-const acmeCacheDir = "/etc/backpack/acme"
+var acmeCacheDir = app.ConfigDir + "/acme"
 
 type Server struct {
 	config *config.ServerConfig

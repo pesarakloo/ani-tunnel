@@ -89,17 +89,17 @@ raw PREROUTING -p tcp --dport <port> -j NOTRACK
 raw OUTPUT     -p tcp --sport <port> -j NOTRACK
 ```
 
-Tagged `backpack-pck-<port>`, so one left behind by a crash is easy to find:
+Tagged a tunnel-specific ownership tag, so one left behind by a crash is easy to find:
 
 ```bash
-iptables-save | grep backpack-pck
+iptables-save | grep -E -- '-pck-[a-f0-9:-]+'
 ```
 
 **Without `iptables` the tunnel runs and is unreliable** — it works, then drops
 under load or after a pause. The log says so at startup, so read it:
 
 ```bash
-journalctl -u backpack-<name> -n 50
+journalctl -u ani-tunnel-<name> -n 50
 ```
 
 Your **cloud provider's security group** still applies to the inbound direction,
@@ -140,7 +140,7 @@ connection tracking و همهٔ زنجیره‌های netfilter. برای وقت
 هر طرف فقط دربارهٔ پکت‌های خودش تصمیم می‌گیرد، پس لازم نیست دو طرف یکی باشند.
 سؤال override رابط شبکه را `N` بگذار — همه‌چیز از جدول مسیریابی خوانده می‌شود.
 
-هنگام استارت دو قانون iptables با تگ `backpack-pck-<port>` اضافه می‌کند و موقع
+هنگام استارت دو قانون iptables با تگ اختصاصی همان تونل اضافه می‌کند و موقع
 استاپ برمی‌دارد. **اگر iptables نصب نباشد تونل بالا می‌آید ولی ناپایدار است.**
 پورت TCP تونل را در security group ابری هم باز کن.
 

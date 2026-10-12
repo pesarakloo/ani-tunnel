@@ -25,9 +25,9 @@ func TestADirectKharejFromTheSetupLinkCarriesTraffic(t *testing.T) {
 	if os.Getenv("BP_L3_LIVE") == "" {
 		t.Skip("set BP_L3_LIVE=1 on a host that allows unprivileged user namespaces to run this")
 	}
-	bin := os.Getenv("BACKPACK_CURRENT_BINARY")
+	bin := os.Getenv("ANI_TUNNEL_CURRENT_BINARY")
 	if bin == "" {
-		bin = filepath.Join(t.TempDir(), "backpack")
+		bin = filepath.Join(t.TempDir(), "ani-tunnel")
 		build := exec.Command("go", "build", "-o", bin, "../..")
 		build.Stderr = os.Stderr
 		if err := build.Run(); err != nil {

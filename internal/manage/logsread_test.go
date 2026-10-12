@@ -19,7 +19,7 @@ func TestLogsAreReadWholeAndWithoutColour(t *testing.T) {
 	was := journalctl
 	journalctl = func(args ...string) ([]byte, error) {
 		gotArgs = args
-		return []byte("2026-09-29T17:59:21+03:30 host backpack[12]: 29-Sep 17:59:21 [\x1b[32mINFO\x1b[0m] control channel up\n"), nil
+		return []byte("2026-09-29T17:59:21+03:30 host ani-tunnel[12]: 29-Sep 17:59:21 [\x1b[32mINFO\x1b[0m] control channel up\n"), nil
 	}
 	t.Cleanup(func() { journalctl = was })
 

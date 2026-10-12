@@ -98,7 +98,7 @@ func TestJoiningWithNoRunnerFailsAtReaching(t *testing.T) {
 // The ordinary case for a server somebody has just bought: it answers, it has
 // no ani tunnel, and the panel installs it rather than sending them to a terminal
 // on that machine.
-func TestAMachineWithNoBackpackIsInstalled(t *testing.T) {
+func TestAMachineWithNoAniTunnelIsInstalled(t *testing.T) {
 	r := &joinRunner{err: node.ErrNeedsInstall}
 	got, err := fleetWith(t, r).Join("de-1", "192.0.2.1", 22, "root", "pw", true)
 	if err != nil {
@@ -112,7 +112,7 @@ func TestAMachineWithNoBackpackIsInstalled(t *testing.T) {
 
 // And when the operator said not to, it is not installed and the join fails —
 // rather than quietly installing anyway.
-func TestAMachineWithNoBackpackIsNotInstalledWhenItWasNotAsked(t *testing.T) {
+func TestAMachineWithNoAniTunnelIsNotInstalledWhenItWasNotAsked(t *testing.T) {
 	r := &joinRunner{err: node.ErrNeedsInstall}
 	_, err := fleetWith(t, r).Join("de-1", "192.0.2.1", 22, "root", "pw", false)
 	if err == nil {

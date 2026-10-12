@@ -12,6 +12,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/xtaci/kcp-go/v5"
 	"golang.org/x/crypto/pbkdf2"
 )
@@ -208,7 +209,7 @@ func kcpCrypt(token string) (kcp.BlockCrypt, error) {
 	if key, ok := kcpKeys.Load(token); ok {
 		return kcp.NewAESBlockCrypt(key.([]byte))
 	}
-	key := pbkdf2.Key([]byte(token), []byte("backpack-kcp-v1"), 100_000, 32, sha256.New)
+	key := pbkdf2.Key([]byte(token), []byte(compat.KCPLabel), 100_000, 32, sha256.New)
 	kcpKeys.Store(token, key)
 	block, err := kcp.NewAESBlockCrypt(key)
 	if err != nil {

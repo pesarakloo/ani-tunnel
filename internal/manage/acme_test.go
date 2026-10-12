@@ -17,8 +17,8 @@ func tlsSpec(domain, email string) TunnelSpec {
 		BindAddr:   "0.0.0.0:443",
 		Token:      "token-0123456789abcdefghijklmno",
 		Ports:      []string{"8080"},
-		TLSCert:    "/etc/backpack/certs/acme-test.crt",
-		TLSKey:     "/etc/backpack/certs/acme-test.key",
+		TLSCert:    "/etc/ani-tunnel/certs/acme-test.crt",
+		TLSKey:     "/etc/ani-tunnel/certs/acme-test.key",
 		ACMEDomain: domain,
 		ACMEEmail:  email,
 	}
@@ -30,7 +30,7 @@ func TestACMEDomainIsWrittenToConfig(t *testing.T) {
 	for _, want := range []string{
 		`acme_domain = "tunnel.example.com"`,
 		`acme_email = "me@example.com"`,
-		`tls_cert = "/etc/backpack/certs/acme-test.crt"`,
+		`tls_cert = "/etc/ani-tunnel/certs/acme-test.crt"`,
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("config is missing %s:\n%s", want, got)

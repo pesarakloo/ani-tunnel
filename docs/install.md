@@ -9,7 +9,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/pesarakloo/ani-tunnel/main/i
 ```
 
 It downloads the prebuilt release archive for your architecture (amd64/arm64)
-into `/root/BackPack`, **verifies it against the checksum published with the
+into `/root/ani-tunnel`, **verifies it against the checksum published with the
 release**, installs the binary, and opens the menu when it finishes.
 
 Reopen the menu any time with:
@@ -18,9 +18,9 @@ Reopen the menu any time with:
 sudo ani-tunnel
 ```
 
-Everything lands in a tidy layout — the release bundle in `/root/BackPack`,
-backups in `/root/BackPack/backups`, tunnel configs in `/etc/backpack`. See
-[server layout](server-layout.md).
+Everything lands in a tidy layout — the release bundle in `/root/ani-tunnel`,
+backups in `/root/ani-tunnel/backups`, tunnel configs in `/etc/ani-tunnel`. See
+[server layout](server-layout.md). Existing installations keep their current configuration and service paths during an upgrade.
 
 > **Building from source** still works as a fallback: clone the repo and run
 > `sudo bash install.sh` inside it. If the release download fails it builds with
@@ -51,16 +51,16 @@ scp install.sh SHA256SUMS ani-tunnel_linux_amd64.tar.gz root@SERVER_IP:/root/
 ssh root@SERVER_IP "cd /root && sudo bash install.sh"
 ```
 
-### By hand
+### By hand (fresh installations)
 
 Upload the archive to the server, then as root:
 
 ```bash
 sha256sum ani-tunnel_linux_amd64.tar.gz        # compare against SHA256SUMS
 tar xzf ani-tunnel_linux_amd64.tar.gz
-mkdir -p /etc/backpack /root/BackPack/backups
-install -m 0755 backpack /usr/local/bin/backpack
-echo /root/BackPack > /etc/backpack/install_path
+mkdir -p /etc/ani-tunnel /root/ani-tunnel/backups
+install -m 0755 ani-tunnel /usr/local/bin/ani-tunnel
+echo /root/ani-tunnel > /etc/ani-tunnel/install_path
 sudo ani-tunnel
 ```
 
@@ -71,7 +71,7 @@ hand. `install -m 0755` already sets the executable bit, so no `chmod` is needed
 ### Updating offline
 
 The same way: repeat the steps with the newer archive. `install` replaces the
-binary in place, and your tunnels in `/etc/backpack` are untouched. Restart them
+binary in place, and your tunnels in `/etc/ani-tunnel` are untouched. Restart them
 afterwards with `sudo ani-tunnel` → **Manage → Restart ALL**.
 
 ---
@@ -107,7 +107,7 @@ amd64 و `aarch64` یعنی arm64. بهترین راه این است که `insta
 
 **آپدیت:** از منوی اصلی گزینهٔ ۸ — با تأیید SHA-256 و **بازگشت خودکار** اگر تونل
 بالا نیامد. آپدیت آفلاین هم همان مراحل نصب با آرشیو جدید است و کانفیگ‌های
-`/etc/backpack` دست‌نخورده می‌مانند.
+`/etc/ani-tunnel` دست‌نخورده می‌مانند.
 
 </div>
 
@@ -116,4 +116,4 @@ amd64 و `aarch64` یعنی arm64. بهترین راه این است که `insta
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

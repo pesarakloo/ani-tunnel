@@ -9,6 +9,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/utils/network"
 )
 
@@ -29,7 +30,7 @@ const probeLen = 8 // [magic:4][seq:4]
 // Magic derives the per-session probe marker from the shared token, so the
 // receiver accepts only this run's probes and ignores unrelated UDP traffic.
 func Magic(token string) uint32 {
-	sum := sha256.Sum256([]byte("backpack-spooftest-v1:" + token))
+	sum := sha256.Sum256([]byte(compat.SpoofTestLabel + token))
 	return binary.BigEndian.Uint32(sum[:4])
 }
 

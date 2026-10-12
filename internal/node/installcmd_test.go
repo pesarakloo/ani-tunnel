@@ -74,7 +74,7 @@ func TestTheUpgradeCommandRestartsTheTunnelsAfterInstalling(t *testing.T) {
 	dir := t.TempDir()
 	log := filepath.Join(dir, "log")
 	installer := filepath.Join(dir, "install.sh")
-	bin := filepath.Join(dir, "backpack")
+	bin := filepath.Join(dir, "ani-tunnel")
 	if err := os.WriteFile(installer, []byte("echo installed >> "+log+"\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func TestTheUpgradeCommandStopsWhenTheInstallerFails(t *testing.T) {
 	dir := t.TempDir()
 	log := filepath.Join(dir, "log")
 	installer := filepath.Join(dir, "install.sh")
-	bin := filepath.Join(dir, "backpack")
+	bin := filepath.Join(dir, "ani-tunnel")
 	_ = os.WriteFile(installer, []byte("exit 3\n"), 0o644)
 	_ = os.WriteFile(bin, []byte("#!/bin/sh\necho \"bin $*\" >> "+log+"\n"), 0o755)
 

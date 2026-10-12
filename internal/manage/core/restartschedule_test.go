@@ -27,7 +27,7 @@ func TestTheRestartScheduleIsUTCAndReadsBack(t *testing.T) {
 			t.Errorf("%q does not read back", cal)
 		}
 	}
-	if !strings.HasPrefix(scheduledRestartUnit("k1", "timer"), "backpack-restart-") {
+	if !strings.HasPrefix(scheduledRestartUnit("k1", "timer"), "ani-tunnel-restart-") {
 		t.Error("the timer must not be named like a tunnel's own unit")
 	}
 	if EffectiveRestartHours(36) != 24 || EffectiveRestartHours(0) != 0 || EffectiveRestartHours(7) != 7 {

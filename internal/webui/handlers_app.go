@@ -80,7 +80,7 @@ var (
 //go:embed assets/sw.js
 var serviceWorkerJS []byte
 
-// iconSVG is the header's backpack mark on the panel's dark ground, as a file.
+// iconSVG is the header's ani-tunnel mark on the panel's dark ground, as a file.
 var iconSVG = []byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#147efb"/><stop offset="1" stop-color="#38d5ff"/></linearGradient></defs><rect width="128" height="128" rx="30" fill="#061020"/><g fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="M30 98 64 28l34 70M45 69h38"/><path d="m15 50 13 14-13 14m98-28-13 14 13 14"/></g></svg>`)
 
 func handleManifest(w http.ResponseWriter, r *http.Request) {

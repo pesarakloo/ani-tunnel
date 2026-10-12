@@ -1,7 +1,7 @@
 // Package socks implements a minimal SOCKS5 CONNECT proxy (server + client)
 // with username/password auth and no third-party dependencies.
 //
-// In backpack it lets a node that can't reach a destination (e.g. the Iran
+// In ani-tunnel it lets a node that can't reach a destination (e.g. the Iran
 // server reaching Telegram) tunnel through a peer that can: the peer runs the
 // SOCKS5 server bound to localhost, that port is exposed over the reverse
 // tunnel, and the origin dials the proxy through the tunnel.

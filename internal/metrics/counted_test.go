@@ -28,7 +28,7 @@ func traffic(fn func()) (in, out uint64) {
 
 // A read is inbound and a write is outbound, and both are counted in full.
 func TestReadsAreInboundAndWritesAreOutbound(t *testing.T) {
-	payload := bytes.Repeat([]byte("backpack"), 4096) // 32 KiB
+	payload := bytes.Repeat([]byte("ani-tunnel"), 4096) // 32 KiB
 
 	var sink bytes.Buffer
 	c := CountedConn(writeOnly{w: &sink})

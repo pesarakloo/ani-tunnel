@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 // Which source ports the pck carrier's segments come from, and how the firewall
@@ -98,14 +100,14 @@ var pckClientBases = map[string]uint16{}
 
 // pckTunnelID names a tunnel in its firewall rules without naming its token.
 func pckTunnelID(token string) string {
-	sum := sha256.Sum256([]byte("backpack-pck-v1:" + token))
+	sum := sha256.Sum256([]byte(compat.PCKLabel + token))
 	return hex.EncodeToString(sum[:4])
 }
 
 // legacyPckClientPortBase is the range v1.8.4 and earlier derived from the
 // token, still needed once: to clear the rules such a build left behind.
 func legacyPckClientPortBase(token string) uint16 {
-	sum := sha256.Sum256([]byte("backpack-pck-v1:" + token))
+	sum := sha256.Sum256([]byte(compat.PCKLabel + token))
 	return 32768 + binary.BigEndian.Uint16(sum[:2])%(28000-pckPortSpan)
 }
 

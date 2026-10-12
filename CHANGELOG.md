@@ -1,5 +1,12 @@
 # ani tunnel changelog
 
+## v1.9.2
+
+- Use ani tunnel throughout commands, installation paths, service names, the panel and documentation.
+- Bring the English and Persian installation guides in line with the original project.
+- Accept older setup links, release archives and backups, and retain existing installation paths during upgrades.
+- Publish the `ani-tunnel` executable while keeping previous updaters compatible.
+
 ## v1.9.1 — 2026-10-11
 
 - Fork from upstream v1.9.0 at 132467bfdfb2698d74ada2992413e75bfccbfbd3.
@@ -14,6 +21,7 @@
 ## Upstream history
 
 # Changelog
+
 
 All notable changes to ani tunnel are documented here.
 
@@ -314,7 +322,7 @@ All notable changes to ani tunnel are documented here.
   quic, pck, xdi, sni) on free ports, with the performance preset the operator
   picks, and checks IP spoofing both ways the way Manage → IP Spoofing Tester
   does, with 10.10.10.10 as the forged source. It prints a short link —
-  `backpack://t.` and 26 characters: where the Iran side's coordinator is and
+  `ani-tunnel://t.` and 26 characters: where the Iran side's coordinator is and
   the test's secret. On the kharej, the same menu item or `ani-tunnel link apply
   '<link>'` fetches the rest from the coordinator in one packet and builds the
   other end of each tunnel from it, by the path a real tunnel takes. The Iran
@@ -335,7 +343,7 @@ All notable changes to ani tunnel are documented here.
 
 - **A kharej without ani tunnel is set up with one command.** Under the setup
   link, the Iran wizard (and Manage → Setup Link) now prints a second line:
-  `bash <(curl -fsSL …/install.sh) link apply 'backpack://…'`. Run as root on
+  `bash <(curl -fsSL …/install.sh) link apply 'ani-tunnel://…'`. Run as root on
   the kharej, it installs ani tunnel, builds the tunnel from the link, starts it,
   and waits to say whether it connected — nothing is asked. On a kharej that
   already runs ani tunnel the same is `ani-tunnel link apply '<link>'`, which also
@@ -357,12 +365,12 @@ All notable changes to ani tunnel are documented here.
 
 ### Changed
 
-- **Setup links are half as long.** A new link format (backpack://2.) carries
+- **Setup links are half as long.** A new link format (ani-tunnel://2.) carries
   exactly the same settings as before — each field as a one-byte number, the
   repeated words as one byte, an IPv4 address in four bytes, the token packed
   as the base-62 number it is, and the default name left out — with a checksum
   so a link cut short in a paste is refused. A reverse tunnel's link went from
-  264 characters to 132. Links from older builds (backpack://1.) still work; a
+  264 characters to 132. Links from older builds (ani-tunnel://1.) still work; a
   build older than this one cannot read the new format and says so.
 
 - **IP spoofing and SNI spoofing use the new wizard and the setup link.** Both
@@ -563,7 +571,7 @@ All notable changes to ani tunnel are documented here.
   had carried out of the total, while the next tunnel given the same name
   started from the old one's figure. Totals now carry over exactly, and a
   deleted tunnel's traffic moves into a server-wide ledger
-  (`/etc/backpack/retired-traffic.json`, kept in backups) that the headline
+  (`/etc/ani-tunnel/retired-traffic.json`, kept in backups) that the headline
   figure includes. Traffic already lost before this version cannot be
   recovered.
 
@@ -688,7 +696,7 @@ All notable changes to ani tunnel are documented here.
   tunnel addresses are picked for it. The paragraphs of explanation between
   the questions are gone. The summary before **Create This Tunnel** is one
   short block — *Direct PCK*, interface, where it dials, forwarded ports,
-  tuning, config file — with the **Setup Link** (`backpack://…`) under it. On
+  tuning, config file — with the **Setup Link** (`ani-tunnel://…`) under it. On
   the kharej server, after the carrier: **Setup Link** (paste the line; only a
   name is asked) or **Manual**. Each kharej behind one Iran server gets its own
   link. By hand, the kharej side no longer invents a token: it has to be the
@@ -703,7 +711,7 @@ All notable changes to ani tunnel are documented here.
   dials, where each forwarded port lands on kharej) shows the **Setup Link**
   before **Create This Tunnel**. On kharej, after the transport: **Setup Link**
   (paste; only the name is asked) or **Manual**, whose token prompt no longer
-  offers the meaningless default `backpack`. The link now also carries simple
+  offers the meaningless default `ani-tunnel`. The link now also carries simple
   auth, the smux version and, for KCP, the exact error-correction pair, so a
   kharej built from it cannot disagree with Iran on them. The `udp` transport,
   whose forwarded ports are UDP anyway, is no longer asked about UDP. Tested
@@ -746,7 +754,7 @@ All notable changes to ani tunnel are documented here.
   Manage menu; the panel's speed test went with them — the button on the
   tunnel card, its screen, `/api/speedtest` and `/api/speedtest/plan` — and a
   managed server no longer answers the `receive` operation that started the
-  far-end sink. The game endpoint list (`/etc/backpack/game-endpoints.list`)
+  far-end sink. The game endpoint list (`/etc/ani-tunnel/game-endpoints.list`)
   is no longer read.
 
 ### Fixed
@@ -1106,7 +1114,7 @@ raw-socket carriers need capabilities a test process does not have.
   question needs a far end that will answer.
 
 - **The engine has a local control socket, and the watchdog has a rung below
-  restarting it.** `/run/backpack/<name>.sock`, 0600, in a directory only root
+  restarting it.** `/run/ani-tunnel/<name>.sock`, 0600, in a directory only root
   can enter.
 
   The graduated response to a stalled tunnel had one lever and said so: an
@@ -1921,10 +1929,10 @@ raw-socket carriers need capabilities a test process does not have.
   preset (log level, MSS, zero-copy, UDP) no longer does. A tunnel with no
   preset now shows "Custom — tuned by hand" instead of "Balanced".
 - **Health Check kept failing after Optimize.** Two causes:
-  - Optimize wrote `/etc/sysctl.d/99-backpack.conf`, which at boot is read
+  - Optimize wrote `/etc/sysctl.d/99-ani-tunnel.conf`, which at boot is read
     *before* `99-sysctl.conf` — the link to `/etc/sysctl.conf`, where other
     installers and panels write their own values. Theirs won after every
-    reboot. The file is now `zz-backpack.conf`, applied last; the old one is
+    reboot. The file is now `zz-ani-tunnel.conf`, applied last; the old one is
     removed the next time Optimize runs, which `update` does on its own.
   - On a container VPS (OpenVZ, LXC) the kernel refuses most `net.core.*`
     keys, and Optimize said nothing about it. It now lists every key that was
@@ -2538,7 +2546,7 @@ teardown to pin. They are left as they are.
 ### Fixed
 
 - **Updating now repairs the kernel tuning an older version wrote.** Nothing
-  rewrites `/etc/sysctl.d/99-backpack.conf` after it is first written, so a
+  rewrites `/etc/sysctl.d/99-ani-tunnel.conf` after it is first written, so a
   value this program wrote and later regretted outlived every update — which is
   what kept `ip_local_port_range = 1024 65535` on servers tuned before the fix
   below, however many versions they installed afterwards. An update now
@@ -2551,7 +2559,7 @@ teardown to pin. They are left as they are.
   than inheriting the old ones.
 
 - **Health Check now reports a widened ephemeral port range.** Updating does not
-  rewrite `/etc/sysctl.d/99-backpack.conf`, so a server set up before the fix
+  rewrite `/etc/sysctl.d/99-ani-tunnel.conf`, so a server set up before the fix
   below still carries `1024 65535` and has no way to know — the symptom appears
   weeks later on a service that cannot bind its own port. Health Check reads the
   live range and says so, with the one action that fixes it.
@@ -3344,7 +3352,7 @@ made-up numbers to come from is what let so many of them survive.
 - **A tunnel's certificate could only be set from the CLI.** The panel now reads
   and sets it, on the transports that present one.
 - **Invented figures shown as readings.** Signed-in devices that belonged to
-  whoever drew the screen, a bot named `@my_backpack_bot`, a backup taken
+  whoever drew the screen, a bot named `@my_ani_tunnel_bot`, a backup taken
   "yesterday at 03:00", a week's traffic on a tunnel that had carried none, and
   every dialog headed with another machine's hostname and version.
 - **`?mock=1` drew an empty server over a busy one.** The panel's fixtures were
@@ -3583,7 +3591,7 @@ about itself sooner. Every fix has a regression test that fails without it.
   default is still too large.
 
 - **A layer-3 tunnel crashed the process, and then would not stay up.** From
-  the field, both on one server: `backpack` died with a memory fault inside the
+  the field, both on one server: `ani-tunnel` died with a memory fault inside the
   TUN read and systemd restarted it, and the tunnel that came back logged
   `reading from bp0: too many segments` and tore itself down every few seconds.
   Two symptoms, one wrong assumption.
@@ -4142,7 +4150,7 @@ cause.
   exit-to-game leg, adds the hub-to-exit tunnel leg where a TCP tunnel makes it
   measurable, and rates the result with a typical player last mile folded in.
   Test one game, every game through an exit, or a custom host. The endpoint list
-  is bundled but editable (`/etc/backpack/game-endpoints.list`) — publishers move
+  is bundled but editable (`/etc/ani-tunnel/game-endpoints.list`) — publishers move
   addresses, and many game servers filter ICMP, both of which the tool says
   plainly rather than guessing around.
 - **FEC recommendation in the Link Test.** After measuring loss, the test now
@@ -4222,7 +4230,7 @@ cause.
   kernel's RSTs for the tunnel's port — the kernel is not listening there, so it
   answers every arriving segment with one, and to a stateful device in between
   that RST is the connection ending — and one keeping the pseudo-flows out of
-  conntrack. They are tagged `backpack-pck-<port>`. Without `iptables` the tunnel
+  conntrack. They are tagged a tunnel-specific ownership tag. Without `iptables` the tunnel
   runs and is unreliable, and says so at startup. The client's source port is
   derived from the token rather than picked at random, so a reconnect reuses the
   rule instead of adding one. See [docs/tcp-pck.md](docs/tcp-pck.md).
@@ -4572,7 +4580,7 @@ cause.
 - **An interrupted backup left a truncated archive under a name that said it
   was whole.** The archive was written straight to its final path, so a backup
   cut short by a full disk, a reboot or a killed process left a partial file
-  called `backpack-backup-….tar.gz` — which the retention policy then counted
+  called `ani-tunnel-backup-….tar.gz` — which the retention policy then counted
   as one of the ten kept, and a restore accepted as far as the point it stopped.
 
   Worse, the write could report success over a short archive even without a
@@ -4602,7 +4610,7 @@ cause.
   abandoned by a hard crash is swept up after an hour rather than staying in
   the backup folder for the life of the host. The archive writer and the
   publishing are separate functions now, so both are covered by tests that need
-  neither a real `/etc/backpack` nor a real crash.*
+  neither a real `/etc/ani-tunnel` nor a real crash.*
 
 - **A bad backup archive used to half-restore, leaving an installation that
   came from neither the backup nor from what was there before.** Restoring
@@ -4969,9 +4977,9 @@ clients is the combination that degrades most gracefully.
 - **ani tunnel squatted the well-known SOCKS port 1080 on every install.** The
   monitor bound `127.0.0.1:1080` unconditionally, as a fallback for tunnels
   written before the relay port was derived from the token. On a machine that
-  also runs a panel or an xray SOCKS inbound on 1080, backpack boots first, wins
+  also runs a panel or an xray SOCKS inbound on 1080, ani-tunnel boots first, wins
   the port, and the other service quietly loses it — the panel's nodes drop after
-  a reboot, and the only way anyone found to clear it was to uninstall backpack.
+  a reboot, and the only way anyone found to clear it was to uninstall ani-tunnel.
   It now binds 1080 only when a tunnel actually still maps to it, and leaves it
   alone otherwise. Nothing that uses the derived port — every current tunnel, and
   every fresh install — touches 1080 at all.
@@ -5578,7 +5586,7 @@ that remembers, and two bugs that made a KCP tunnel look broken are fixed.
   every 60s, repeated at most every 30 minutes. Existing installs get these on
   upgrade — a bot that never warns you is the thing being fixed — and all of it
   is editable under **Telegram Bot → Alerts**, where 0 turns a threshold off.
-  Alerts are watched by the backpack-monitor service (see below), which runs
+  Alerts are watched by the ani-tunnel-monitor service (see below), which runs
   independently of the web panel.
 - **The Telegram bot reports much more.** Alongside Status it now has **System**
   (processor, memory, disk, swap, load and uptime, with bars), **Tunnels**
@@ -5654,7 +5662,7 @@ that remembers, and two bugs that made a KCP tunnel look broken are fixed.
   alert. Nothing visibly broke; it just quietly stopped watching, which is the
   worst way for a monitor to fail.
 
-  They now run as `backpack-monitor.service`, which depends on nothing but the
+  They now run as `ani-tunnel-monitor.service`, which depends on nothing but the
   machine being up and restarts itself if it dies. Existing installs pick it up
   automatically — the CLI installs it on launch and the updater installs it as
   part of an update — so there is nothing to do by hand. **Health Check** reports
@@ -5898,12 +5906,12 @@ that remembers, and two bugs that made a KCP tunnel look broken are fixed.
   and from the panel itself (Settings → Panel port, with auto-redirect).
 - **Release-based install & updates.** `install.sh` now installs the prebuilt
   `ani-tunnel_linux_amd64.tar.gz` / `ani-tunnel_linux_arm64.tar.gz` release assets
-  into **`/root/BackPack`**, and the in-app **Update** detects newer versions
+  into **`/root/ani-tunnel`**, and the in-app **Update** detects newer versions
   from GitHub releases and installs them — trying **direct → tunnel SOCKS relay
   → public mirrors**, so it works from Iran without Go or git on the server.
   Works for old clone-based installs too: run Update once from ≤ v1.2.0 (final
   git pull + rebuild) and every update after that comes from the releases.
-- **Backups folder.** Backups now live in **`/root/BackPack/backups`** by
+- **Backups folder.** Backups now live in **`/root/ani-tunnel/backups`** by
   default, and Restore lists the archives there so you just pick one.
 - Port entries are **validated** before they reach a config (`443`, `400-450`,
   `443=1.1.1.1:443`, …) — a bad entry used to crash-loop the tunnel service.

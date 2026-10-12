@@ -186,7 +186,7 @@ export async function logsView(ctx) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `backpack-${name}-${new Date().toISOString().slice(0, 10)}.log`;
+        a.download = `ani-tunnel-${name}-${new Date().toISOString().slice(0, 10)}.log`;
         document.body.append(a);
         a.click();
         a.remove();

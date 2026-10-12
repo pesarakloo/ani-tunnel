@@ -29,7 +29,7 @@ func (s *server) handleBackupExport(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	name := fmt.Sprintf("backpack-backup-%s.tar.gz", time.Now().Format("2006-01-02-1504"))
+	name := fmt.Sprintf("ani-tunnel-backup-%s.tar.gz", time.Now().Format("2006-01-02-1504"))
 
 	w.Header().Set("Content-Type", "application/gzip")
 	w.Header().Set("Content-Disposition", `attachment; filename="`+name+`"`)

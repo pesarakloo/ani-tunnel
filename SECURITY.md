@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Email **600o60o6@gmail.com** with `BACKPACK SECURITY` in the subject.
+Email **600o60o6@gmail.com** with `ANI_TUNNEL SECURITY` in the subject.
 
 Please do not open a public issue first. ani tunnel is used to get past national
 filtering; a vulnerability published before there is a release to move to is a

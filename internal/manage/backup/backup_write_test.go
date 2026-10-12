@@ -144,7 +144,7 @@ func TestFailedBackupLeavesNothingBehind(t *testing.T) {
 		t.Fatal("a failing write reported success")
 	}
 
-	archives, _ := filepath.Glob(filepath.Join(dir, "backpack-backup-*.tar.gz"))
+	archives, _ := filepath.Glob(filepath.Join(dir, "ani-tunnel-backup-*.tar.gz"))
 	if len(archives) != 0 {
 		t.Errorf("a failed backup published %v", archives)
 	}
@@ -181,7 +181,7 @@ func TestBackupsInTheSameSecondDoNotReplaceEachOther(t *testing.T) {
 
 	// Chronological order is what pruning relies on, and it has to hold across
 	// the suffixed names too.
-	archives, _ := filepath.Glob(filepath.Join(dir, "backpack-backup-*.tar.gz"))
+	archives, _ := filepath.Glob(filepath.Join(dir, "ani-tunnel-backup-*.tar.gz"))
 	if len(archives) != 2 {
 		t.Fatalf("found %d archives, want 2", len(archives))
 	}
@@ -193,14 +193,14 @@ func TestPruneKeepsTheNewestAndSweepsStalePartials(t *testing.T) {
 	dir := t.TempDir()
 
 	for i := 0; i < backupRetention+4; i++ {
-		name := filepath.Join(dir, "backpack-backup-2026010"+string(rune('0'+i%10))+"-000000.tar.gz")
+		name := filepath.Join(dir, "ani-tunnel-backup-2026010"+string(rune('0'+i%10))+"-000000.tar.gz")
 		if err := os.WriteFile(name, []byte("x"), 0600); err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	fresh := filepath.Join(dir, ".backpack-backup-fresh.partial")
-	stale := filepath.Join(dir, ".backpack-backup-stale.partial")
+	fresh := filepath.Join(dir, ".ani-tunnel-backup-fresh.partial")
+	stale := filepath.Join(dir, ".ani-tunnel-backup-stale.partial")
 	for _, p := range []string{fresh, stale} {
 		if err := os.WriteFile(p, []byte("x"), 0600); err != nil {
 			t.Fatal(err)
@@ -213,7 +213,7 @@ func TestPruneKeepsTheNewestAndSweepsStalePartials(t *testing.T) {
 
 	pruneBackups(dir)
 
-	archives, _ := filepath.Glob(filepath.Join(dir, "backpack-backup-*.tar.gz"))
+	archives, _ := filepath.Glob(filepath.Join(dir, "ani-tunnel-backup-*.tar.gz"))
 	if len(archives) != backupRetention {
 		t.Errorf("kept %d archives, want %d", len(archives), backupRetention)
 	}
@@ -295,7 +295,7 @@ func writeTree(t *testing.T, root string, files map[string]os.FileMode) {
 
 func partials(t *testing.T, dir string) []string {
 	t.Helper()
-	matches, err := filepath.Glob(filepath.Join(dir, ".backpack-backup-*.partial"))
+	matches, err := filepath.Glob(filepath.Join(dir, ".ani-tunnel-backup-*.partial"))
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/flynn/noise"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"golang.org/x/crypto/hkdf"
 )
 
@@ -38,7 +39,7 @@ const (
 	// noisePrologue binds the handshake transcript to this application. It never
 	// travels on the wire — both ends mix it in and must agree — so a handshake
 	// captured from somewhere else cannot be replayed into this one.
-	noisePrologue = "backpack-noise-v1"
+	noisePrologue = compat.NoisePrologue
 
 	// noiseMaxPayload is the most plaintext a single Noise message can carry: the
 	// 65535-byte message ceiling less the 16-byte authentication tag.
@@ -102,7 +103,7 @@ var noiseSuite = noise.NewCipherSuite(noise.DH25519, noise.CipherChaChaPoly, noi
 // noisePSK turns the tunnel token into the 32-byte pre-shared key.
 func noisePSK(token string) ([]byte, error) {
 	psk := make([]byte, 32)
-	r := hkdf.New(sha256.New, []byte(token), []byte("backpack-stealth-psk-v1"), nil)
+	r := hkdf.New(sha256.New, []byte(token), []byte(compat.NoisePSKLabel), nil)
 	if _, err := io.ReadFull(r, psk); err != nil {
 		return nil, err
 	}

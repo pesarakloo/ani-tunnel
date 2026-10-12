@@ -25,11 +25,11 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      # Configuration round-trip tests exercise the real /etc/backpack paths.
+      # Configuration round-trip tests exercise the real /etc/ani-tunnel paths.
       # The ephemeral runner owns their private fixture directory; production
       # configuration permissions remain unchanged.
       - name: Prepare configuration test fixtures
-        run: sudo install -d -m 700 -o "$(id -un)" -g "$(id -gn)" /etc/backpack
+        run: sudo install -d -m 700 -o "$(id -un)" -g "$(id -gn)" /etc/ani-tunnel
 
       # The panel's own tests are plain `node --test` with no dependencies, and
       # `go test ./internal/webui` runs them. That test skips when node is
@@ -239,7 +239,7 @@ jobs:
         # wobble with scheduling and the heap saws between collections, so a
         # threshold on any single reading would fail on runner noise.
         env:
-          BACKPACK_SOAK_SECONDS: "120"
+          ANI_TUNNEL_SOAK_SECONDS: "120"
         run: go test ./internal/e2e/ -run TestASustainedRunDoesNotLeak -count=1 -v -timeout 10m
 
   compat:
@@ -276,13 +276,13 @@ jobs:
           fi
           echo "previous release: $tag"
           git worktree add --detach /tmp/prev "$tag"
-          (cd /tmp/prev && go build -o /tmp/backpack-prev .)
-          echo "binary=/tmp/backpack-prev" >> "$GITHUB_OUTPUT"
+          (cd /tmp/prev && go build -o /tmp/ani-tunnel-prev .)
+          echo "binary=/tmp/ani-tunnel-prev" >> "$GITHUB_OUTPUT"
 
       - name: Old and new ends of one tunnel, both directions
         if: steps.prev.outputs.binary != ''
         env:
-          BACKPACK_PREV_BINARY: ${{ steps.prev.outputs.binary }}
+          ANI_TUNNEL_PREV_BINARY: ${{ steps.prev.outputs.binary }}
         run: go test ./internal/e2e/ -run TestThePreviousReleaseStillTalksToThisOne -count=1 -v
 
   build:

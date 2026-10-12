@@ -14,7 +14,7 @@ import (
 // starts instead of making them. It returns the number of starts so far.
 func fakePanelUnit(t *testing.T) *int {
 	t.Helper()
-	unit := filepath.Join(t.TempDir(), "backpack-webui.service")
+	unit := filepath.Join(t.TempDir(), "ani-tunnel-webui.service")
 	prevPath, prevStart, prevRemove := panelUnitPath, installAndStart, removeUnit
 	starts := 0
 	panelUnitPath = func() string { return unit }

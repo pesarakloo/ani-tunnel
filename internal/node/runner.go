@@ -70,7 +70,7 @@ func (e ErrOffline) Unwrap() error { return e.Err }
 // ErrNeedsInstall means the far server cannot answer this panel because the
 // ani tunnel on it is missing or too old. Both are fixed the same way, by
 // installing over the same SSH connection, so both carry this.
-var ErrNeedsInstall = errors.New("backpack must be installed on that server")
+var ErrNeedsInstall = errors.New("ani-tunnel must be installed on that server")
 
 // SSHRunner drives managed servers over SSH.
 type SSHRunner struct {
@@ -178,7 +178,7 @@ func (r *SSHRunner) exec(ctx context.Context, name string, t SSHTarget, req Requ
 		}
 		stdout, err = execRequest(ctx, c, raw)
 		if err != nil {
-			return Response{}, backpackMissing(err)
+			return Response{}, aniTunnelMissing(err)
 		}
 	}
 
@@ -207,7 +207,7 @@ func lastLine(s string) string {
 	return s
 }
 
-// backpackMissing turns "this server cannot answer the panel" into the thing
+// aniTunnelMissing turns "this server cannot answer the panel" into the thing
 // the operator has to do about it, which is the same thing in both of the ways
 // it happens.
 //
@@ -224,12 +224,12 @@ func lastLine(s string) string {
 // this panel can talk to — and both are answered the same way, by installing,
 // which is also how a server is upgraded. So both are named the same, and the
 // add handler's install path covers both.
-func backpackMissing(err error) error {
+func aniTunnelMissing(err error) error {
 	msg := err.Error()
 	switch {
 	case strings.Contains(msg, "not found"), strings.Contains(msg, "No such file"):
 		return errNotInstalled("ani tunnel is not installed on that server")
-	case outdatedBackpack(msg):
+	case outdatedAniTunnel(msg):
 		return errNotInstalled("the ani tunnel on that server is too old to be managed " +
 			"from this panel")
 	}
@@ -247,20 +247,20 @@ func errNotInstalled(what string) error {
 		what, ErrNeedsInstall)
 }
 
-// outdatedBackpack recognises a binary that ran and did not understand.
+// outdatedAniTunnel recognises a binary that ran and did not understand.
 //
 // It is matched on the shape of the answer rather than on a version, because
 // the panel has no version to read: asking for one is itself a command the old
 // binary would reject. What every version before this one has in common is that
-// an unknown subcommand is refused by name, and that the whole of `backpack
+// an unknown subcommand is refused by name, and that the whole of `ani-tunnel
 // node`'s help follows it.
-func outdatedBackpack(msg string) bool {
+func outdatedAniTunnel(msg string) bool {
 	if strings.Contains(msg, `unknown command "exec"`) {
 		return true
 	}
 	// Older still, or built differently: the usage arrives without the line
 	// above it. Two markers rather than one, so an unrelated message that
-	// happens to contain the word "backpack" is not read as this.
+	// happens to contain the word "ani-tunnel" is not read as this.
 	return strings.Contains(msg, "ani-tunnel node") &&
 		(strings.Contains(msg, "node setup") || strings.Contains(msg, "--setup-key"))
 }
@@ -376,7 +376,7 @@ func (r *SSHRunner) Upgrade(name string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	out, err := runLong(c, upgradeCommand(installerURL(), app.BinPath))
+	out, err := runLong(c, upgradeCommand(installerURL(), "/usr/local/bin/ani-tunnel"))
 	if err != nil {
 		return string(out), fmt.Errorf("upgrading ani tunnel on %s failed: %w", name, err)
 	}
@@ -425,7 +425,7 @@ func upgradeCommand(url, bin string) string {
 // base64; it gets the request the old way, as the argument, which is no worse
 // than it always was — and upgrading it ends that.
 func execRequest(ctx context.Context, c *ssh.Client, raw []byte) ([]byte, error) {
-	bin := quote(app.BinPath)
+	bin := quote("/usr/local/bin/ani-tunnel")
 	out, err := runOver(ctx, c, bin+" node exec -", []byte(b64(raw)+"\n"))
 	if err != nil && strings.Contains(err.Error(), "not valid base64") {
 		return runOver(ctx, c, bin+" node exec "+quote(b64(raw)), nil)

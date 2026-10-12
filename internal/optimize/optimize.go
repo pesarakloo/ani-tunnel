@@ -11,6 +11,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 // sysctls is the tuning table applied to /etc/sysctl.d and the live kernel.
@@ -122,22 +124,22 @@ func EngineStartupTuning() [][2]string {
 // manage.NodePairPath are overridden.
 //
 // It is named to come last. The kernel's settings are applied at boot file by
-// file in name order, and the last to set a key wins. It was 99-backpack.conf,
+// file in name order, and the last to set a key wins. It was 99-ani-tunnel.conf,
 // which sorts before 99-sysctl.conf — the link to /etc/sysctl.conf that Debian
 // and Ubuntu install, and the file every other installer and "VPS optimizer"
 // script writes to. So on the next boot anything those had put there quietly
 // replaced what Optimize set, and Health Check went on saying "run Optimize" to
 // somebody who had, as many times as they liked. zz- sorts after every
 // numbered file.
-var sysctlFile = "/etc/sysctl.d/zz-backpack.conf"
+var sysctlFile = compat.ExistingPath("/etc/sysctl.d/zz-ani-tunnel.conf", "/etc/sysctl.d/zz-backpack.conf")
 
 // legacySysctlFile is where an older Optimize wrote the same thing. Apply
 // removes it, so the two cannot disagree; WasApplied still counts it.
-var legacySysctlFile = "/etc/sysctl.d/99-backpack.conf"
+var legacySysctlFile = compat.ExistingPath("/etc/sysctl.d/99-ani-tunnel.conf", "/etc/sysctl.d/99-backpack.conf")
 
-const limitsFile = "/etc/security/limits.d/99-backpack.conf"
+var limitsFile = compat.ExistingPath("/etc/security/limits.d/99-ani-tunnel.conf", "/etc/security/limits.d/99-backpack.conf")
 
-const limitsContent = `# Raised by backpack for high connection counts
+const limitsContent = `# Raised by ani-tunnel for high connection counts
 * soft nofile 1048576
 * hard nofile 1048576
 root soft nofile 1048576

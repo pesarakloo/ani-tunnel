@@ -22,12 +22,12 @@ import (
 // survives, and a Fatalf in the test binary itself would end every other test
 // with it.
 func TestAnInvalidEditDoesNotKillTheRunningTunnel(t *testing.T) {
-	if os.Getenv("BACKPACK_RELOAD_CHILD") == "1" {
+	if os.Getenv("ANI_TUNNEL_RELOAD_CHILD") == "1" {
 		reloadChild()
 		return
 	}
 	cmd := exec.Command(os.Args[0], "-test.run=^TestAnInvalidEditDoesNotKillTheRunningTunnel$")
-	cmd.Env = append(os.Environ(), "BACKPACK_RELOAD_CHILD=1")
+	cmd.Env = append(os.Environ(), "ANI_TUNNEL_RELOAD_CHILD=1")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("the process exited while reloading a file that parses but is invalid: %v\n%s", err, out)

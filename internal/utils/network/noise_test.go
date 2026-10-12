@@ -65,7 +65,7 @@ func TestStealthRoundTrip(t *testing.T) {
 	// exercise the chunking on write and the reassembly on read. Written on the
 	// client end, read on the server end — the closing write shuts cc so the
 	// reader sees EOF rather than blocking forever.
-	big := bytes.Repeat([]byte("backpack-"), 20000) // ~180 KB, several records
+	big := bytes.Repeat([]byte("ani-tunnel-"), 20000) // ~180 KB, several records
 	go func() {
 		io.Copy(cc, bytes.NewReader(big))
 		cc.Close()

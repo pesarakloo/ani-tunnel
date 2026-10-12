@@ -106,7 +106,7 @@ func TestConfigReloadKeepsRunningOnABrokenFile(t *testing.T) {
 // tidiness of /tmp.
 func scratchDir(t *testing.T) string {
 	t.Helper()
-	dir, err := os.MkdirTemp("", "backpack-reload-")
+	dir, err := os.MkdirTemp("", "ani-tunnel-reload-")
 	if err != nil {
 		t.Fatalf("MkdirTemp: %v", err)
 	}

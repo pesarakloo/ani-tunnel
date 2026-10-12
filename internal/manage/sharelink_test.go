@@ -59,7 +59,7 @@ func TestShareLinkIsRecognisableAndCompact(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.HasPrefix(s, "backpack://2.") {
+	if !strings.HasPrefix(s, "ani-tunnel://2.") {
 		t.Errorf("the link does not announce its scheme and version: %q", s[:min(20, len(s))])
 	}
 	// A fully loaded spoof tunnel is the biggest this gets. If it grows past a
@@ -75,7 +75,7 @@ func TestShareLinkIsRecognisableAndCompact(t *testing.T) {
 // decoding into a partial tunnel.
 func TestATruncatedLinkIsRefused(t *testing.T) {
 	s, _ := sampleLink().Encode()
-	for _, cut := range []int{len(s) - 1, len(s) - 5, len(s) / 2, len("backpack://1.") + 4} {
+	for _, cut := range []int{len(s) - 1, len(s) - 5, len(s) / 2, len("ani-tunnel://1.") + 4} {
 		if _, err := DecodeShareLink(s[:cut]); err == nil {
 			t.Errorf("a link cut to %d characters was accepted", cut)
 		}
@@ -87,9 +87,9 @@ func TestBadLinksSayWhatIsWrong(t *testing.T) {
 	for _, tc := range []struct{ name, in, want string }{
 		{"empty", "", "paste the setup link"},
 		{"not a link", "hello there", "does not look like"},
-		{"no version separator", "backpack://abcdef", "incomplete"},
-		{"a version this build does not know", "backpack://9.abcdef", "version 9"},
-		{"damaged payload", "backpack://1.!!!!not-base64!!!!", "damaged"},
+		{"no version separator", "ani-tunnel://abcdef", "incomplete"},
+		{"a version this build does not know", "ani-tunnel://9.abcdef", "version 9"},
+		{"damaged payload", "ani-tunnel://1.!!!!not-base64!!!!", "damaged"},
 	} {
 		_, err := DecodeShareLink(tc.in)
 		if err == nil {
@@ -347,7 +347,7 @@ func TestManagedHTTPSSetupInstructionsRequireMatchingBuild(t *testing.T) {
 
 func TestManagedHTTPSRealityExportRequiresTheServerPrivateKey(t *testing.T) {
 	cfg := config.Config{Server: config.ServerConfig{BindAddr: "127.0.0.1:3080", Token: "secret", Transport: config.TCP,
-		Xray: config.XrayServerConfig{Binary: "/usr/local/lib/backpack/xray", Mode: "reality", Listen: "0.0.0.0:443"}}}
+		Xray: config.XrayServerConfig{Binary: "/usr/local/lib/ani-tunnel/xray", Mode: "reality", Listen: "0.0.0.0:443"}}}
 	for _, key := range []string{"", "   ", "invalid"} {
 		cfg.Server.Xray.PrivateKey = key
 		if raw, err := shareLinkOf("test", "127.0.0.1", cfg); err == nil || raw != "" {

@@ -3,6 +3,7 @@ package backup
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/manage/core"
 	"io"
 	"os"
@@ -47,7 +48,7 @@ func TakeSnapshot(reason string) (Snapshot, error) {
 
 	// 1) The binary currently installed.
 	if core.FileExists(app.BinPath) {
-		if err := copyFile(app.BinPath, filepath.Join(dir, "backpack"), 0755); err != nil {
+		if err := copyFile(app.BinPath, filepath.Join(dir, "ani-tunnel"), 0755); err != nil {
 			os.RemoveAll(dir)
 			return Snapshot{}, fmt.Errorf("could not snapshot the binary: %w", err)
 		}
@@ -129,7 +130,8 @@ func RestoreSnapshot(s Snapshot, logf func(string)) error {
 	}
 
 	// 1) Binary.
-	if bin := filepath.Join(s.Dir, "backpack"); core.FileExists(bin) {
+	bin := compat.ExistingPath(filepath.Join(s.Dir, "ani-tunnel"), filepath.Join(s.Dir, compat.LegacyBinary))
+	if core.FileExists(bin) {
 		logf("Restoring the previous binary...")
 		tmp := app.BinPath + ".rollback"
 		if err := copyFile(bin, tmp, 0755); err != nil {

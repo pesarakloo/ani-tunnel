@@ -25,7 +25,7 @@ func TestEveryDocumentSaysWhenItWasVerified(t *testing.T) {
 		t.Fatalf("found %d documents — this test is looking in the wrong place", len(docs))
 	}
 
-	want := "Last verified against Backpack " + UpstreamVersion
+	want := "Last verified against upstream " + UpstreamVersion
 	for _, path := range docs {
 		b, err := os.ReadFile(path)
 		if err != nil {
@@ -33,7 +33,7 @@ func TestEveryDocumentSaysWhenItWasVerified(t *testing.T) {
 			continue
 		}
 		s := string(b)
-		if !strings.Contains(s, "Last verified against Backpack") {
+		if !strings.Contains(s, "Last verified against upstream") {
 			t.Errorf("%s has no verification stamp. Add one, or a figure in it will be "+
 				"read as current however old it is.", filepath.Base(path))
 			continue

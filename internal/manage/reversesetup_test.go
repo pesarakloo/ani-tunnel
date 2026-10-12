@@ -201,7 +201,7 @@ func TestManagedHTTPSClientWizardCanBeCancelledBeforeSaving(t *testing.T) {
 	if !strings.Contains(out, "Reverse XHTTP / TLS (Kharej)") || !strings.Contains(out, "127.0.0.1:8443") || strings.Contains(out, "Optional Connection Settings") || !strings.Contains(out, "How Do You Want To Set Up This Side?") {
 		t.Fatalf("incorrect managed wizard flow:\n%s", out)
 	}
-	if _, err := os.Stat("/etc/backpack/" + name + ".toml"); !os.IsNotExist(err) {
+	if _, err := os.Stat("/etc/ani-tunnel/" + name + ".toml"); !os.IsNotExist(err) {
 		t.Fatal("cancelled wizard wrote a tunnel config")
 	}
 }
@@ -261,7 +261,7 @@ func TestTheReverseLinkBuildsTheMatchingKharej(t *testing.T) {
 			}
 			if needsTLS(tr) {
 				s.SimpleAuth = true
-				s.TLSCert, s.TLSKey = "/etc/backpack/c.pem", "/etc/backpack/k.pem"
+				s.TLSCert, s.TLSKey = "/etc/ani-tunnel/c.pem", "/etc/ani-tunnel/k.pem"
 			}
 
 			raw := pendingReverseLink(s, "203.0.113.9", linkExtras{})
@@ -323,7 +323,7 @@ func TestTheReverseSummaryIsShortAndCarriesTheLink(t *testing.T) {
 		"443 → 127.0.0.1:443", "8080 → 127.0.0.1:2096", "Turbo",
 		"Setup Link (sudo ani-tunnel → Setup Kharej → Reverse → Setup Link):",
 		"Install ani tunnel And Set Up This Tunnel (Kharej Without ani tunnel, As Root):",
-		"install.sh) link apply 'backpack://", link,
+		"install.sh) link apply 'ani-tunnel://", link,
 	} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("the reverse summary is missing %q:\n%s", want, out)
@@ -467,7 +467,7 @@ func TestSetupFromALinkKeepsThePairedReverseSettings(t *testing.T) {
 			}
 			if needsTLS(tr) {
 				srv.SimpleAuth = true
-				srv.TLSCert, srv.TLSKey = "/etc/backpack/c.pem", "/etc/backpack/k.pem"
+				srv.TLSCert, srv.TLSKey = "/etc/ani-tunnel/c.pem", "/etc/ani-tunnel/k.pem"
 			}
 			if tr == "kcp" {
 				srv.KCPDataShards, srv.KCPParityShards = 0, 0

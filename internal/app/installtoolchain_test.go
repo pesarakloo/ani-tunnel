@@ -78,8 +78,8 @@ else exit 4; fi
 			}
 			// Redirect the system paths before running any installer functions.
 			block := strings.NewReplacer("/usr/local/go/bin/go", `"$PWD/local-bin/go"`,
-				"/usr/local/go/bin", "$PWD/local-bin", "/etc/backpack/install_path", `"$PWD/install_path"`).Replace(functions)
-			prefix := "set -euo pipefail\nexport GOTOOLCHAIN=auto\nGO_VERSION=1.26.6\nGO_MIN_MINOR=26\nSCRIPT_DIR=$PWD\nINSTALL_DIR=$PWD\nBIN_PATH=$PWD/backpack\nexport PATH=\"$PWD/path-bin:$PATH\"\n"
+				"/usr/local/go/bin", "$PWD/local-bin", "/etc/ani-tunnel/install_path", `"$PWD/install_path"`).Replace(functions)
+			prefix := "set -euo pipefail\nexport GOTOOLCHAIN=auto\nGO_VERSION=1.26.6\nGO_MIN_MINOR=26\nSCRIPT_DIR=$PWD\nINSTALL_DIR=$PWD\nBIN_PATH=$PWD/ani-tunnel\nexport PATH=\"$PWD/path-bin:$PATH\"\n"
 			stubs := "\ninfo() { echo \"$*\"; }; warn() { echo \"$*\"; }; err() { echo \"$*\" >&2; }; download_go() { echo DOWNLOAD_REQUIRED >&2; return 1; };\n"
 			cmd := exec.Command("bash", "-c", prefix+block+stubs+"build_from_source")
 			cmd.Dir = dir

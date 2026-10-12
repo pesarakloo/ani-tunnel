@@ -138,7 +138,7 @@ if [ "$result" = OK ] && [ -n "${BLOCKFLOW:-}" ]; then
       # v1.8.4 and earlier did not log it; they derived it from the token, and
       # a single-path tunnel took the first port of that range.
       local h
-      h=$(printf 'backpack-pck-v1:%s' "$TOKEN" | sha256sum | cut -c1-4)
+      h=$(printf 'ani-tunnel-pck-v1:%s' "$TOKEN" | sha256sum | cut -c1-4)
       p=$(( 32768 + 16#$h % (28000 - 128) ))
     fi
     echo "$p"

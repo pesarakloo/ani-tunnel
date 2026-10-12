@@ -607,8 +607,8 @@ export function dashboard(ctx) {
         title: `Delete <q>${esc(name)}</q>?`,
         body: 'Its config and its service are removed. This cannot be undone.',
         lines: [
-          { text: `/etc/backpack/${name}.json` },
-          { text: `backpack-${name}.service` },
+          { text: `/etc/ani-tunnel/${name}.json` },
+          { text: `ani-tunnel-${name}.service` },
         ],
         go: 'Delete', danger: true,
       });

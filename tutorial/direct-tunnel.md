@@ -152,7 +152,7 @@ Your tunnel is listed with role `iran` or `kharej` and transport
 The log tells you the same thing in one line:
 
 ```
-journalctl -u backpack-<name> -f
+journalctl -u ani-tunnel-<name> -f
 ```
 
 **Iran**, when it is working:
@@ -181,7 +181,7 @@ firewall problem, because the kharej side answers a bad handshake with silence
 by design. Check both files:
 
 ```bash
-grep -E 'token|transport' /etc/backpack/*.toml
+grep -E 'token|transport' /etc/ani-tunnel/*.toml
 ```
 
 **`session 0 could not be established: ... connection refused` / timeout**

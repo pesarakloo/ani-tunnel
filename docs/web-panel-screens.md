@@ -64,7 +64,7 @@ command to carry to the other end and nothing to wait for. See
 
 The Iran side of the menu's Connection Test, in two panes of one size. The left
 one is what to do now: the form, then a 15-minute dial with the one line for the
-kharej — `sudo ani-tunnel link apply 'backpack://t.…'` — then the test's own
+kharej — `sudo ani-tunnel link apply 'ani-tunnel://t.…'` — then the test's own
 countdown, then *Best for this path*. The right one fills a row per transport as
 its echoes come back and, at the end, keeps only what held or was unstable. The
 test tunnels are removed when it ends.
@@ -175,4 +175,4 @@ hash همه‌جا درست reload می‌شود. هر صفحه‌ای در ای
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

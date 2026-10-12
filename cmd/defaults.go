@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"net"
 	"os"
 	"os/exec"
@@ -18,7 +19,7 @@ import (
 )
 
 const ( // Default values
-	defaultToken          = "backpack"
+	defaultToken          = compat.DefaultToken
 	defaultChannelSize    = 2048
 	defaultRetryInterval  = 3 // only for client
 	defaultConnectionPool = 8
@@ -41,7 +42,7 @@ const ( // Default values
 	defaultMaxFrameSize     = 32768   // 32KB
 	defaultMaxReceiveBuffer = 4194304 // 4MB
 	defaultMaxStreamBuffer  = 65536   // 64KB
-	defaultSnifferLog       = "backpack.json"
+	defaultSnifferLog       = "ani-tunnel.json"
 	defaultMuxCon           = 8
 )
 

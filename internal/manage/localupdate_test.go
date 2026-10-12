@@ -41,10 +41,10 @@ func TestOnlyThisMachinesArchiveIsOffered(t *testing.T) {
 		other = "amd64"
 	}
 	for _, name := range []string{
-		"backpack.tar.gz",
+		"ani-tunnel.tar.gz",
 		"ani-tunnel_linux_" + other + ".tar.gz",
 		"ani-tunnel_linux_" + runtime.GOARCH + ".tgz",
-		"Backpack_linux_" + runtime.GOARCH + ".tar.gz",
+		"ani tunnel_linux_" + runtime.GOARCH + ".tar.gz",
 	} {
 		if err := os.WriteFile(filepath.Join(dir, name), []byte("x"), 0644); err != nil {
 			t.Fatal(err)
@@ -195,12 +195,12 @@ func TestTheOperatorIsToldWhereToPutTheFile(t *testing.T) {
 // showed "Version unknown".
 func TestTheArchiveVersionIsTheFirstLineOfTheFlag(t *testing.T) {
 	dir := t.TempDir()
-	bin := filepath.Join(dir, "backpack")
+	bin := filepath.Join(dir, "ani-tunnel")
 	if err := os.WriteFile(bin, []byte("#!/bin/sh\necho v9.9.9\necho https://github.com/pesarakloo/ani-tunnel\n"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	archive := filepath.Join(dir, "ani-tunnel_linux_amd64.tar.gz")
-	if out, err := exec.Command("tar", "czf", archive, "-C", dir, "backpack").CombinedOutput(); err != nil {
+	if out, err := exec.Command("tar", "czf", archive, "-C", dir, "ani-tunnel").CombinedOutput(); err != nil {
 		t.Skipf("tar unavailable: %v %s", err, out)
 	}
 	if got := versionInArchive(archive); got != "v9.9.9" {

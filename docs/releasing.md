@@ -27,8 +27,8 @@ written down, so a release made in a hurry is the same release.
       user namespaces (CI does not), with the previous release at one end:
       ```
       git worktree add --detach /tmp/prev <previous tag>
-      (cd /tmp/prev && go build -o /tmp/backpack-prev .)
-      BP_L3_LIVE=1 BACKPACK_PREV_BINARY=/tmp/backpack-prev \
+      (cd /tmp/prev && go build -o /tmp/ani-tunnel-prev .)
+      BP_L3_LIVE=1 ANI_TUNNEL_PREV_BINARY=/tmp/ani-tunnel-prev \
         go test ./internal/e2e -run TestL3CarriersOverARealTUN -count=1 -v
       ```
       Every carrier, a listener killed and restarted, a lossy path, and udp,
@@ -46,7 +46,7 @@ git push origin v1.8.5
 The release workflow builds every architecture, writes `SHA256SUMS`, signs it
 with the repository secret, and publishes.
 
-What is signed is the **tag and the list together** (`backpack release <tag>`,
+What is signed is the **tag and the list together** (the protocol domain in `internal/compat/wire.go`, the tag,
 a newline, then `SHA256SUMS`), not the list alone. The list names archives,
 not versions, so a signature over it alone would let a mirror serve an older
 release's genuine files under a newer tag and have every updater verify and
@@ -96,7 +96,7 @@ project's history and the one nothing else records.
 To check a binary you downloaded against it:
 
 ```
-go version -m ./backpack
+go version -m ./ani-tunnel
 ```
 
 ## If the signing key is lost or leaked
@@ -151,4 +151,4 @@ during the incident.
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

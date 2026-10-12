@@ -16,7 +16,7 @@ import (
 )
 
 func init() {
-	if os.Getenv("BACKPACK_HELPER_OUTPUT_FIXTURE") != "1" {
+	if os.Getenv("ANI_TUNNEL_HELPER_OUTPUT_FIXTURE") != "1" {
 		return
 	}
 	checking := len(os.Args) > 2 && os.Args[2] == "-test"
@@ -28,12 +28,12 @@ func init() {
 	fmtOutput(os.Stdout, "stdout")
 	fmtOutput(os.Stderr, "stderr")
 	if checking {
-		if os.Getenv("BACKPACK_HELPER_CHECK_FAIL") == "1" {
+		if os.Getenv("ANI_TUNNEL_HELPER_CHECK_FAIL") == "1" {
 			os.Exit(2)
 		}
 		os.Exit(0)
 	}
-	ln, err := net.Listen("tcp", os.Getenv("BACKPACK_HELPER_LISTEN"))
+	ln, err := net.Listen("tcp", os.Getenv("ANI_TUNNEL_HELPER_LISTEN"))
 	if err != nil {
 		os.Exit(3)
 	}
@@ -72,9 +72,9 @@ func TestHelperOutputStaysInTheDiagnosticFile(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			env := append(os.Environ(), "BACKPACK_HELPER_OUTPUT_FIXTURE=1", "BACKPACK_HELPER_LISTEN="+listener.Addr().String())
+			env := append(os.Environ(), "ANI_TUNNEL_HELPER_OUTPUT_FIXTURE=1", "ANI_TUNNEL_HELPER_LISTEN="+listener.Addr().String())
 			if failedCheck {
-				env = append(env, "BACKPACK_HELPER_CHECK_FAIL=1")
+				env = append(env, "ANI_TUNNEL_HELPER_CHECK_FAIL=1")
 			}
 			logger := logrus.New()
 			logger.SetOutput(io.Discard)

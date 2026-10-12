@@ -224,7 +224,7 @@ func explainSendFailure(c Config, err error) error {
 		return fmt.Errorf("%w\n\nNothing is listening on 127.0.0.1:%d on THIS server.\n"+
 			"Tunnel %q is supposed to be forwarding that port to Telegram but is not.\n\n"+
 			"Run:  sudo ani-tunnel → Telegram Bot → Diagnose relay\n"+
-			"or check:  journalctl -u backpack-%s -n 30", err, port, name, name)
+			"or check:  journalctl -u ani-tunnel-%s -n 30", err, port, name, name)
 
 	case strings.Contains(msg, "does not look like a TLS handshake"):
 		return fmt.Errorf("%w\n\nSomething answered, but not Telegram. Tunnel %q is still forwarding\n"+

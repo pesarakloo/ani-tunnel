@@ -24,7 +24,7 @@ import (
 //
 // These guard the three of them.
 
-// The limit is a property of the unit, so every unit backpack installs has to
+// The limit is a property of the unit, so every unit ani-tunnel installs has to
 // ask for one.
 func TestEveryServiceUnitAsksForItsOpenFileLimit(t *testing.T) {
 	for _, c := range []struct{ file, what string }{

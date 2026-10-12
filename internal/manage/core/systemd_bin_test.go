@@ -22,11 +22,11 @@ func TestSystemctlRunsTheRealBinaryName(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Setenv("PATH", dir)
-	out, err := Systemctl("is-active", "backpack-x")
+	out, err := Systemctl("is-active", "ani-tunnel-x")
 	if err != nil {
 		t.Fatalf("Systemctl did not reach a binary named systemctl: %v", err)
 	}
-	if !strings.Contains(out, "stub:is-active backpack-x") {
+	if !strings.Contains(out, "stub:is-active ani-tunnel-x") {
 		t.Fatalf("Systemctl output = %q", out)
 	}
 }

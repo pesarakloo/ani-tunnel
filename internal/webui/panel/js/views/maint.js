@@ -274,7 +274,7 @@ export async function maintView(ctx) {
                 <button class="btn6 ghost6" data-b="delete" title="Delete">✕</button>
                 <div class="bsout" hidden></div></div>`).join('')}</div>`
               : '<div class="note6">None yet — the weekly backup and "Back up now" put them here.</div>'}
-            <div class="lfh"><b>Off-site copy</b><span>A command run on every new backup. <code>{}</code> is the file — e.g. <code>rclone copy {} remote:backpack/</code>.</span></div>
+            <div class="lfh"><b>Off-site copy</b><span>A command run on every new backup. <code>{}</code> is the file — e.g. <code>rclone copy {} remote:ani-tunnel/</code>.</span></div>
             <div class="osrow"><input id="oscmd" value="${esc(v.offsite || '')}" placeholder="blank — backups stay on this machine" spellcheck="false">
               <button class="btn6" id="ossave">Save</button><button class="btn6" id="ossend"${v.offsite ? '' : ' disabled'}>Send the newest</button></div>
             ${note ? `<div class="note6">${note}</div>` : ''}

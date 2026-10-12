@@ -24,11 +24,11 @@ var logger = utils.NewLogger("info")
 
 // main has two modes:
 //
-//   - Engine mode:  `backpack -c /etc/backpack/<name>.toml`
+//   - Engine mode:  `ani-tunnel -c /etc/ani-tunnel/<name>.toml`
 //     Runs a single tunnel (server or client). This is what the systemd
 //     units execute. Behaviour is identical to the original engine.
 //
-//   - Menu mode:    `backpack`  (no arguments)
+//   - Menu mode:    `ani-tunnel`  (no arguments)
 //     Opens the interactive management CLI on the VPS.
 func main() {
 	// Handled before the flags, because it is a subcommand with flags of its
@@ -66,9 +66,9 @@ func main() {
 	showVersion := flag.Bool("v", false, "print the version and exit")
 	restartAll := flag.Bool("restart-all", false, "restart every configured tunnel and exit (used by the auto-refresh job)")
 	tgReport := flag.Bool("telegram-report", false, "send a Telegram status report and exit (used by the scheduled job)")
-	webPanel := flag.Bool("webui", false, "run the web panel (used by the backpack-webui service)")
-	monitorMode := flag.Bool("monitor", false, "run the watchdog, Telegram bot and alerts (used by the backpack-monitor service)")
-	proxyMode := flag.Bool("proxy", false, "run the built-in SOCKS5/HTTP proxy (used by the backpack-proxy service)")
+	webPanel := flag.Bool("webui", false, "run the web panel (used by the ani-tunnel-webui service)")
+	monitorMode := flag.Bool("monitor", false, "run the watchdog, Telegram bot and alerts (used by the ani-tunnel-monitor service)")
+	proxyMode := flag.Bool("proxy", false, "run the built-in SOCKS5/HTTP proxy (used by the ani-tunnel-proxy service)")
 	flag.Parse()
 
 	switch {
@@ -138,5 +138,5 @@ func runEngine(configPath string) {
 	<-sigChan
 	cancel()
 	<-done
-	logger.Info("backpack engine stopped")
+	logger.Info("ani-tunnel engine stopped")
 }

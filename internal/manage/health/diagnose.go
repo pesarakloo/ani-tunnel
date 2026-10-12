@@ -482,7 +482,7 @@ func tunnelChecksFor(t core.Tunnel, pairs [][2]string) []Check {
 	case spec.Token == "":
 		out = append(out, Check{Group: g, Name: "Token", Level: CheckFail,
 			Detail: "empty", Fix: "recreate the tunnel with a generated token"})
-	case len(spec.Token) < 16 || spec.Token == "backpack":
+	case len(spec.Token) < 16 || spec.Token == "ani-tunnel":
 		out = append(out, Check{Group: g, Name: "Token", Level: CheckWarn,
 			Detail: "weak or default", Fix: "recreate the tunnel to get a 64-char token"})
 	default:

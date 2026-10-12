@@ -96,7 +96,7 @@ one line on the kharej server.
    addresses are chosen for you — a free `10.10.N.0/30` — and can be changed
    under fine-tune.
 2. The summary before **Create This Tunnel** shows the **Setup Link**: one line
-   starting with `backpack://`. It carries everything both ends must agree on
+   starting with `ani-tunnel://`. It carries everything both ends must agree on
    — token, port, carrier, addresses, GRE key, error correction, MTU and
    segment cap — so nothing is retyped. It is shown again at any time under
    **Manage tunnels → the tunnel → Setup Link**.
@@ -118,7 +118,7 @@ The rest of this page is what the two sides write.
 Two files, one on each host. They must agree on the token, the encapsulation
 and the carrier.
 
-**Iran** (`/etc/backpack/l3.toml`):
+**Iran** (`/etc/ani-tunnel/l3.toml`):
 
 ```toml
 [l3]
@@ -129,7 +129,7 @@ local_ip = "10.10.0.1/30"
 peer_ip  = "10.10.0.2"
 ```
 
-**Kharej** (`/etc/backpack/l3.toml`):
+**Kharej** (`/etc/ani-tunnel/l3.toml`):
 
 ```toml
 [l3]
@@ -558,7 +558,7 @@ with **Manage → Manage Tunnels → Edit → TCP segment cap**.
 ### Checking it
 
 ```bash
-iptables -t mangle -S | grep backpack-l3-mss
+iptables -t mangle -S | grep ani-tunnel-l3-mss
 ```
 
 Two rules per address family: `FORWARD` for traffic routed *through* this host,
@@ -639,7 +639,7 @@ used exactly as written.
 **راه‌اندازی با لینک:** اول سرور ایران را بساز: **Setup Iran ← Direct ← حامل**،
 بعد آی‌پی یا دامنهٔ خارج، پورت تونل، پورت‌های forward (خالی = TUN)، نام، توکن
 (ایران خودش می‌سازد — Enter بزن)، UDP، تصحیح خطا (FEC)، preset و تنظیم دستی. در
-خلاصهٔ قبل از **Create This Tunnel** یک **لینک `backpack://`** نشان داده می‌شود. روی سرور خارج: **Setup Kharej ← Direct ← همان
+خلاصهٔ قبل از **Create This Tunnel** یک **لینک `ani-tunnel://`** نشان داده می‌شود. روی سرور خارج: **Setup Kharej ← Direct ← همان
 حامل ← Setup Link** و لینک را پیست کن — توکن،
 آدرس‌ها و بقیهٔ تنظیمات خودکار پر می‌شوند. برای هر خارج یک بار از ایران تونل بساز؛
 هر کدام لینک خودش را دارد. لینک شامل توکن است، پس مثل رمز نگهش دار. اگر خارج را
@@ -712,4 +712,4 @@ obfuscated به `CAP_NET_RAW` هم نیاز دارند). **هیچ‌وقت حا�
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

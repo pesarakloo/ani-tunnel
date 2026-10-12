@@ -47,7 +47,7 @@ listens elsewhere there. The summary shows where each one lands
 (**Kharej Serves**). See [the mapping table](before-you-start.md#3-the-ports--and-what-a-mapping-means).
 
 ### `Tunnel Name [server-8443]`
-Names the systemd service (`backpack-<name>`) and the config file. Enter.
+Names the systemd service (`ani-tunnel-<name>`) and the config file. Enter.
 
 ### `Security Token [generated]`
 Press Enter. The setup link carries it to kharej — nothing to copy by hand.
@@ -77,10 +77,10 @@ Kharej Dials    : 203.0.113.9:8443
 Forwarded Ports : 443=2096
 Kharej Serves   : 443 → 127.0.0.1:2096
 Tuning          : Turbo
-Config File     : /etc/backpack/server-8443.toml
+Config File     : /etc/ani-tunnel/server-8443.toml
 
 Setup Link (Setup Kharej → Reverse → The Same Transport → Setup Link) :
-backpack://1.H4sI…
+ani-tunnel://1.H4sI…
 ```
 
 **Create This Tunnel** → the tunnel is created and started. Copy the link, and
@@ -170,7 +170,7 @@ TCP → آی‌پی یا دامنهٔ ایران (پیش‌فرض را Enter ب�
 را `N` → پورت‌های forward (مثلاً `443` یا `443=127.0.0.1:2096`) → نام را Enter →
 توکن را Enter → سؤال UDP (برای وب `N`، برای Xray/وایرگارد `y`) → PROXY protocol
 را `N` بگذار مگر پنل تنظیمش کرده باشی → پریست **Turbo** → تنظیمات پیشرفته `N`. در
-خلاصه یک **Setup Link** (`backpack://…`) نشان داده می‌شود؛ کپی‌اش کن.
+خلاصه یک **Setup Link** (`ani-tunnel://…`) نشان داده می‌شود؛ کپی‌اش کن.
 
 بعد فایروال ایران: `ufw allow 8443/tcp` (پورت تونل) و `ufw allow 443/tcp` (هر
 پورت forward شده).

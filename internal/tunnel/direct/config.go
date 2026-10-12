@@ -2,6 +2,7 @@ package direct
 
 import (
 	"fmt"
+	"github.com/pesarakloo/ani-tunnel/internal/app"
 	"net"
 	"strings"
 	"time"
@@ -51,12 +52,15 @@ const (
 	defaultMaxReceive   = 4194304
 	defaultMaxStream    = 65536
 
-	// defaultACMECacheDir must survive restarts: re-issuing works, but doing
-	// it repeatedly runs into Let's Encrypt's rate limits, and then the tunnel
-	// has no certificate at all until the limit resets. It is the same
-	// directory the reverse transports use, so a host running both does not
-	// hold two accounts.
-	defaultACMECacheDir = "/etc/backpack/acme"
+// defaultACMECacheDir must survive restarts: re-issuing works, but doing
+// it repeatedly runs into Let's Encrypt's rate limits, and then the tunnel
+// has no certificate at all until the limit resets. It is the same
+// directory the reverse transports use, so a host running both does not
+// hold two accounts.
+)
+
+var (
+	defaultACMECacheDir = app.ConfigDir + "/acme"
 )
 
 // Config is one resolved direct tunnel.

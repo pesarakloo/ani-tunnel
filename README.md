@@ -2,95 +2,137 @@
 
 # ani tunnel
 
-Tunnel management for Iran and abroad, with a web panel, terminal menu, Telegram alerts and automatic connection recovery.
+High-performance tunneling between Iran and abroad, with an interactive CLI, a web panel, Telegram monitoring and automatic connection recovery.
 
 [فارسی](README_FA.md) · [Releases](https://github.com/pesarakloo/ani-tunnel/releases) · [Telegram: @xray_chrome](https://t.me/xray_chrome) · [Documentation](docs/README.md)
 
-## Install or upgrade
+# Quick Start
 
-Run as root on **both servers**:
+## 1. Install
+
+Run as root on both servers:
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/pesarakloo/ani-tunnel/main/install.sh)
 ```
 
-Open the menu later:
+Then:
 
 ```bash
 sudo ani-tunnel
 ```
 
-The installer downloads the matching Linux release and checks its SHA256. It stages the executable, saves the previous binary and configuration under `/root/BackPack/backups/ani-*`, and restarts only services that were already running. A failed service restart restores the previous executable. A successful systemd start is not an end-to-end network health check; check tunnel traffic after upgrading.
+The installer downloads the release for the server architecture, verifies its published checksum, installs it and opens the CLI.
 
-For compatibility with existing installations, configuration stays in `/etc/backpack`, systemd units keep the `backpack-` prefix, and `/usr/local/bin/backpack` remains the executable path. `ani-tunnel` is its command alias. Existing tokens, port mappings, setup links and credentials are retained. Wire-level identifiers have not been renamed.
+Supported release architectures currently include:
 
-### Build from source
-
-This also works before the first release is available. Go 1.26.9 or newer is required; the installer can install the required toolchain.
-
-```bash
-git clone https://github.com/pesarakloo/ani-tunnel.git
-cd ani-tunnel
-sudo BP_BUILD_FROM_SOURCE=1 bash install.sh
+```text
+x86_64  → amd64
+aarch64 → arm64
 ```
 
-### Offline installation
+If the server cannot reach GitHub, ani tunnel also supports a completely offline installation.
 
-Download `install.sh`, `SHA256SUMS` and `ani-tunnel_linux_amd64.tar.gz` (or the matching ARM archive) from the **same release**. Copy them into a private directory such as `/root/ani-install` and run:
+See [Installation](docs/install.md).
+
+---
+
+## 2. Configure the Iran server
 
 ```bash
-cd /root/ani-install
-sha256sum -c SHA256SUMS --ignore-missing
-bash install.sh
+sudo ani-tunnel
 ```
 
-This fork initially uses mandatory SHA256 verification over GitHub HTTPS for online updates. It does not ship upstream's release signing key. Maintainers can configure their own Ed25519 key as documented in [RELEASING.md](RELEASING.md).
+Then:
 
-## What changed in v1.9.1
+```text
+1. Setup Iran
+→ Reverse
+→ Transport
+→ Iran IP Or Domain (the detected one is the default)
+→ Tunnel Port
+→ Forwarded Ports
+→ Tunnel Name
+→ Security Token (generated — press Enter)
+→ Carry UDP As Well As TCP
+→ the transport's own questions (certificate for WSS, flags for PCK, …)
+→ How Should The Tunnel Be Tuned?
+```
 
-- Fixed TCP and WebSocket data connections outliving a disconnected control client, retaining open sockets and consuming the connection cap indefinitely.
-- Bind data sockets to their owner at pool admission, so a reconnect cannot accidentally adopt a previous client's connections.
-- Detect unresponsive TCP and WS/WSS control peers with periodic RTT probes, including paths where writes still appear successful. Healthy idle clients remain connected; the watchdog allows at least 30 seconds (or three heartbeat intervals) without an RTT reply.
-- Preserve upstream's reconnect, write timeout and listener lifecycle fixes.
-- Blue ani tunnel branding across the terminal, web panel, login, two-factor screen, app icons and Telegram messages.
-- Installer, updater, source and support links use this repository and `@xray_chrome`.
+The summary before **Create This Tunnel** shows a one-line **Setup Link** (`ani-tunnel://…`). Copy it.
 
-The connection leak is reproduced by regression tests. Without the affected server's logs and configuration, it is not possible to identify every cause of its reported hours-long failure. See [VALIDATION.md](VALIDATION.md) for the actual checks and limits.
+For a first deployment, **TCP** is the simplest starting point.
 
-## Use
+---
 
-For a reverse tunnel, configure the **Iran machine as server** and the **abroad machine as client**, with the same tunnel token and compatible transport settings. The client dials the server; forwarded ports on Iran reach services abroad. The menu also supports direct and layer-3 tunnels.
+## 3. Configure the kharej server
 
-- [Choose a transport](docs/choosing-a-transport.md)
+```bash
+sudo ani-tunnel
+```
+
+Then:
+
+```text
+2. Setup Kharej
+→ Reverse
+→ Same transport
+→ Setup Link → paste the link → Tunnel Name → Create This Tunnel
+```
+
+**Manual** is there too: Iran IP, the same tunnel port, a name, the same token, the same preset.
+
+---
+
+## 4. Check the tunnel
+
+Use:
+
+```text
+Manage → Status
+```
+
+Then:
+
+```text
+Manage → Health Check
+```
+
+If you are unsure which transport to use:
+
+```text
+Manage → Link Test
+```
+
+Link Test measures the route over TCP, including latency, jitter and packet loss, and recommends a suitable transport.
+
+See [Choosing a transport](docs/choosing-a-transport.md).
+
+---
+
+
+## Features
+
+- Reverse and direct tunnels with multiple transports.
+- Automatic reconnection, control-channel liveness checks and cleanup of disconnected clients.
+- Web management, two-factor authentication, traffic statistics and logs.
+- Telegram reports and alerts through a tunnel peer.
+- Verified updates, configuration backups and rollback.
+
+## Documentation
+
+- [Step-by-step tutorials](tutorial/README.md)
 - [Web panel](docs/web-panel.md)
 - [Telegram monitoring](docs/telegram-bot.md)
 - [Configuration reference](docs/config-reference.md)
+- [Updates and rollback](docs/updates.md)
 - [Troubleshooting](docs/troubleshooting.md)
-
-```bash
-ani-tunnel version
-ani-tunnel tunnel list
-ani-tunnel check -c /etc/backpack/your-tunnel.toml
-journalctl -u backpack-your-tunnel.service -n 150 --no-pager
-```
-
-## Development
-
-```bash
-go test ./... -timeout 20m
-go test -race ./internal/server/transport ./internal/client/transport ./internal/utils/handlers -timeout 10m
-python3 tools/validation/install_test.py
-make release
-```
-
-The documentation inherited from upstream retains its original verification stamps. Fork-specific changes and installation behavior are described here, in the Persian README and in VALIDATION.md.
 
 ## License and origin
 
-AGPL-3.0. The original license, notices and trademark policy are retained.
+AGPL-3.0. See [LICENSE](LICENSE), [NOTICE](NOTICE) and [TRADEMARK.md](TRADEMARK.md).
 
 Based on BackPack by Amin Mohammadi (AminMGMT)
 https://github.com/AminMGMT/BackPack
 
-Base: upstream v1.9.0, commit `132467bfdfb2698d74ada2992413e75bfccbfbd3`.
-This is an independently branded fork; ani tunnel modifications are maintained in `pesarakloo/ani-tunnel`.
+This is an independently branded fork. The installation and quick-start instructions are adapted from the original project's README for ani tunnel.

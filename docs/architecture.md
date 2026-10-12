@@ -12,18 +12,18 @@ are.
 
 | Invocation | What runs |
 |---|---|
-| `backpack` | the interactive management menu — `internal/menu` |
-| `backpack -c <file>` | **engine mode**: one tunnel, from one config |
-| `backpack --webui` | the web panel — `internal/webui` |
-| `backpack --monitor` | watchdog, Telegram bot, alerts, history — `internal/monitor` |
-| `backpack --proxy` | the built-in SOCKS5/HTTP proxy — `internal/localproxy` |
-| `backpack --restart-all` / `--telegram-report` | one-shot jobs, run from cron |
+| `ani-tunnel` | the interactive management menu — `internal/menu` |
+| `ani-tunnel -c <file>` | **engine mode**: one tunnel, from one config |
+| `ani-tunnel --webui` | the web panel — `internal/webui` |
+| `ani-tunnel --monitor` | watchdog, Telegram bot, alerts, history — `internal/monitor` |
+| `ani-tunnel --proxy` | the built-in SOCKS5/HTTP proxy — `internal/localproxy` |
+| `ani-tunnel --restart-all` / `--telegram-report` | one-shot jobs, run from cron |
 | `ani-tunnel node exec -` | the one operation a panel runs on a managed server over SSH |
 
 Everything except engine mode is management. Engine mode is the product.
 
 **One process per tunnel.** Each tunnel is its own systemd unit running
-`backpack -c /etc/backpack/<name>.toml`. This is the single most valuable
+`ani-tunnel -c /etc/ani-tunnel/<name>.toml`. This is the single most valuable
 reliability property in the system and it is free: a panic, a leak or a bad
 config affects exactly one tunnel, and systemd restarts exactly that one. Any
 proposal to run several tunnels in one process is trading it away.
@@ -103,7 +103,7 @@ This is the piece worth knowing before changing anything.
 ```
   engine process                    every other process
   ──────────────                    ───────────────────
-  internal/metrics  ──writes──►  /etc/backpack/<name>.metrics.json
+  internal/metrics  ──writes──►  /etc/ani-tunnel/<name>.metrics.json
                                         │
                                         ├──►  the panel
                                         ├──►  the Telegram bot
@@ -204,8 +204,8 @@ they are worth reading before changing the code they sit on.
 این صفحه می‌گوید ani tunnel از چه ساخته شده و کدام بخش به کدام سؤال جواب می‌دهد.
 بقیهٔ راهنماها می‌گویند «چطور کاری را بکنی»؛ این یکی می‌گوید «چیزها کجایند».
 
-**یک باینری، هفت حالت.** `main.go` قبل از هر چیز دیگری تصمیم می‌گیرد: `backpack`
-منوی مدیریت است؛ `backpack -c <file>` **حالت موتور** است یعنی یک تونل از یک
+**یک باینری، هفت حالت.** `main.go` قبل از هر چیز دیگری تصمیم می‌گیرد: `ani-tunnel`
+منوی مدیریت است؛ `ani-tunnel -c <file>` **حالت موتور** است یعنی یک تونل از یک
 کانفیگ؛ `--webui` پنل وب؛ `--monitor` نگهبان و ربات تلگرام و هشدارها و تاریخچه؛
 `--proxy` پراکسی داخلی SOCKS5/HTTP؛ `--restart-all` و `--telegram-report` کارهای
 یک‌باره‌ای که از cron اجرا می‌شوند؛ و `ani-tunnel node exec -` تنها عملیاتی
@@ -251,4 +251,4 @@ context)، پورت‌های فوروارد (`forward.go`)، حلقهٔ کانا
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

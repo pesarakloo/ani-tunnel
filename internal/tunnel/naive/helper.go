@@ -149,7 +149,7 @@ func startManaged(parent context.Context, binary, mode string, body []byte, addr
 	if log == nil {
 		log = logrus.StandardLogger()
 	}
-	dir, err := os.MkdirTemp("", "backpack-"+strings.ToLower(label)+"-")
+	dir, err := os.MkdirTemp("", "ani-tunnel-"+strings.ToLower(label)+"-")
 	if err != nil {
 		return nil, err
 	}

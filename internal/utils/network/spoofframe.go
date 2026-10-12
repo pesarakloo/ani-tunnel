@@ -4,6 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 	"fmt"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 // Framing and identity for the IP-spoofing carrier.
@@ -169,7 +171,7 @@ func (p SpoofProfile) icmpEchoTypes() (request, reply byte) {
 // the UDP/TCP shim — cosmetic, but stable per tunnel so a stateful middlebox
 // sees a consistent flow.
 func spoofIdentity(token string) (tag [xdiTagLen]byte, port uint16) {
-	sum := sha256.Sum256([]byte("backpack-spoof-v1:" + token))
+	sum := sha256.Sum256([]byte(compat.SpoofLabel + token))
 	copy(tag[:], sum[:xdiTagLen])
 	port = binary.BigEndian.Uint16(sum[xdiTagLen : xdiTagLen+2])
 	// Keep the port out of the low well-known range so it reads as an ephemeral

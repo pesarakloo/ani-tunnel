@@ -29,10 +29,10 @@ func TestAnOffsiteCommandRoundTrips(t *testing.T) {
 	if got := OffsiteCommand(); got != "" {
 		t.Fatalf("an unconfigured machine reported %q", got)
 	}
-	if err := SetOffsiteCommand("rclone copy {} remote:backpack/"); err != nil {
+	if err := SetOffsiteCommand("rclone copy {} remote:ani-tunnel/"); err != nil {
 		t.Fatalf("SetOffsiteCommand: %v", err)
 	}
-	if got := OffsiteCommand(); got != "rclone copy {} remote:backpack/" {
+	if got := OffsiteCommand(); got != "rclone copy {} remote:ani-tunnel/" {
 		t.Fatalf("read back %q", got)
 	}
 	if err := SetOffsiteCommand(""); err != nil {
@@ -47,7 +47,7 @@ func TestAnOffsiteCommandRoundTrips(t *testing.T) {
 // "succeed" every week and copy no backup anywhere.
 func TestACommandWithNoPlaceholderIsRefused(t *testing.T) {
 	isolateOffsite(t)
-	err := SetOffsiteCommand("rclone copy remote:backpack/")
+	err := SetOffsiteCommand("rclone copy remote:ani-tunnel/")
 	if err == nil {
 		t.Fatal("a command with no {} was accepted; it would run against nothing " +
 			"and report success every week")

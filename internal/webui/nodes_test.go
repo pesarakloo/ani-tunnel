@@ -486,7 +486,7 @@ func (r *installingRunner) Call(name, op string, body, out any) error {
 // machine's own help, which told them to run `ani-tunnel node setup`, a command
 // this release removed. Every server in an existing fleet is in that state the
 // day the panel is upgraded, so this is the ordinary path, not an edge.
-func TestAServerRunningAnOlderBackpackIsUpgradedNotRefused(t *testing.T) {
+func TestAServerRunningAnOlderAniTunnelIsUpgradedNotRefused(t *testing.T) {
 	isolateFleet(t)
 	s := newFleetServer()
 	t.Cleanup(s.nodes.Stop)

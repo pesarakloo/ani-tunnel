@@ -83,4 +83,4 @@ Turbo یا Aggressive، برای انتقال فایل Throughput. انتخاب�
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

@@ -32,6 +32,7 @@ import (
 	"time"
 
 	"github.com/pesarakloo/ani-tunnel/config"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/spooftest"
 	"github.com/pesarakloo/ani-tunnel/internal/tunnel/naive"
 	"github.com/sirupsen/logrus"
@@ -56,7 +57,7 @@ import (
 // tunnel — an echo a second for a minute, and a bulk transfer at the end — and
 // reports which carried it all, which dropped, and which never came up. Both
 // sides print the table, and nothing is left behind: no unit, no config under
-// /etc/backpack, no rule once the engines have stopped.
+// /etc/ani-tunnel, no rule once the engines have stopped.
 //
 // The Iran side is the judge because it is where users arrive: every tunnel,
 // reverse or direct, is used from there. The kharej hears the verdict through
@@ -146,7 +147,7 @@ type ConnTestLink struct {
 }
 
 // The link the operator copies is only where the Iran side's coordinator is
-// and the test's secret: backpack://t. and some twenty-seven characters. The
+// and the test's secret: ani-tunnel://t. and some twenty-seven characters. The
 // rest — every tunnel's settings — the kharej asks the coordinator for (see
 // ctConfig), and every tunnel's token is derived from the secret rather than
 // carried, which is what keeps that answer inside one packet: a path that cuts
@@ -226,7 +227,7 @@ func ctNewSecret() string {
 // neither the link nor the coordinator's answer has to carry it.
 func ctCaseToken(secret, kind, tr string) string {
 	m := hmac.New(sha256.New, []byte(secret))
-	m.Write([]byte("backpack-conntest/" + kind + "/" + tr))
+	m.Write([]byte(compat.ConnTestLabel + kind + "/" + tr))
 	return hex.EncodeToString(m.Sum(nil))[:32]
 }
 
@@ -391,7 +392,7 @@ func StartConnTestIran(o ConnTestOptions) (*ConnTestIran, string, error) {
 	if host == "" {
 		return nil, "", fmt.Errorf("this server's address is needed: it is what the kharej dials")
 	}
-	dir, err := os.MkdirTemp("", "backpack-conntest-")
+	dir, err := os.MkdirTemp("", "ani-tunnel-conntest-")
 	if err != nil {
 		return nil, "", err
 	}
@@ -572,7 +573,7 @@ func ctCertificate(dir, name, host string) (cert, key, ca string, err error) {
 		return "", "", "", err
 	}
 	leaf := &x509.Certificate{SerialNumber: serial, NotBefore: time.Now().Add(-time.Minute),
-		NotAfter: time.Now().Add(time.Hour), DNSNames: []string{"conntest.backpack.invalid"},
+		NotAfter: time.Now().Add(time.Hour), DNSNames: []string{compat.ConnTestHost},
 		KeyUsage: x509.KeyUsageDigitalSignature, ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth}}
 	if ip := net.ParseIP(host); ip != nil {
 		leaf.IPAddresses = []net.IP{ip}
@@ -807,7 +808,7 @@ func (s *ConnTestIran) startManagedCase(c *connTestCase, used map[int]bool, o Co
 		return
 	}
 	c.link.Tr, c.link.Port, c.link.Name = c.tr, strconv.Itoa(port), c.name
-	settings := ctCarrierSettings{TargetPort: targetPort, ServerName: "conntest.backpack.invalid"}
+	settings := ctCarrierSettings{TargetPort: targetPort, ServerName: compat.ConnTestHost}
 	public := net.JoinHostPort("0.0.0.0", strconv.Itoa(port))
 	var cert, key string
 	if c.tr != "reality" {
@@ -820,7 +821,7 @@ func (s *ConnTestIran) startManagedCase(c *connTestCase, used map[int]bool, o Co
 	switch c.tr {
 	case "naive":
 		spec.NaiveServer = config.NaiveServerConfig{Binary: binary, Listen: public,
-			Username: "backpack", Password: token, Certificate: cert, Key: key}
+			Username: compat.RelayUsername, Password: token, Certificate: cert, Key: key}
 	case "xhttp":
 		spec.XrayServer = config.XrayServerConfig{Binary: binary, Listen: public, Mode: c.tr,
 			UUID: ctUUID(token), ServerName: settings.ServerName, Path: "/" + token,
@@ -881,7 +882,7 @@ func ctManagedClient(ctx context.Context, link ConnTestLink, c ShareLink, dir st
 	// written inside the disposable directory rather than the persistent store.
 	paired := c
 	paired.InnerPort = strconv.Itoa(settings.TargetPort)
-	paired.HelperUser, paired.HelperPassword = "backpack", c.Tok
+	paired.HelperUser, paired.HelperPassword = compat.RelayUsername, c.Tok
 	paired.HelperUUID, paired.HelperSNI = ctUUID(c.Tok), settings.ServerName
 	paired.HelperPublicKey, paired.HelperShortID = settings.PublicKey, settings.ShortID
 	if c.Tr == "xhttp" {
@@ -1955,7 +1956,7 @@ func RunConnTestKharej(ctx context.Context, raw string, out io.Writer, live func
 	defer cancel()
 	root := os.Geteuid() == 0
 
-	dir, err := os.MkdirTemp("", "backpack-conntest-")
+	dir, err := os.MkdirTemp("", "ani-tunnel-conntest-")
 	if err != nil {
 		return nil, ConnTestBest{}, err
 	}

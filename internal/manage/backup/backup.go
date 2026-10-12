@@ -5,11 +5,13 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/manage/core"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/pesarakloo/ani-tunnel/internal/app"
@@ -19,7 +21,7 @@ import (
 // backupMetaName is a synthetic entry stored inside the archive (not written to
 // disk on restore) that captures settings living outside ConfigDir — currently
 // the auto-refresh interval, which is kept in the crontab.
-const backupMetaName = ".backpack-backup.json"
+const backupMetaName = ".ani-tunnel-backup.json"
 
 // fleetKeyName is the one file in the config directory that is never archived.
 // See where it is skipped, below, and internal/node/seal.go for what it is.
@@ -200,15 +202,28 @@ const partialAge = time.Hour
 func pruneBackups(dir string) {
 	sweepPartials(dir)
 
-	matches, _ := filepath.Glob(filepath.Join(dir, "backpack-backup-*.tar.gz"))
+	matches := backupArchives(dir)
 	if len(matches) <= backupRetention {
 		return
 	}
-	// Names are timestamped, so lexical order is chronological.
-	sort.Sort(sort.Reverse(sort.StringSlice(matches)))
+	// backupArchives compares timestamps independently of the filename prefix.
 	for _, old := range matches[backupRetention:] {
 		os.Remove(old)
 	}
+}
+
+// backupArchives includes old backups and orders their timestamped names newest
+// first. Upgrading must not make the previous restore points invisible.
+func backupArchives(dir string) []string {
+	matches, _ := filepath.Glob(filepath.Join(dir, "ani-tunnel-backup-*.tar.gz"))
+	legacy, _ := filepath.Glob(filepath.Join(dir, compat.LegacyBackupPrefix+"*.tar.gz"))
+	matches = append(matches, legacy...)
+	stamp := func(path string) string {
+		name := filepath.Base(path)
+		return strings.TrimPrefix(strings.TrimPrefix(name, "ani-tunnel-backup-"), compat.LegacyBackupPrefix)
+	}
+	sort.Slice(matches, func(i, j int) bool { return stamp(matches[i]) > stamp(matches[j]) })
+	return matches
 }
 
 // sweepPartials removes stale temporary archives. A backup that is interrupted
@@ -217,7 +232,9 @@ func pruneBackups(dir string) {
 // for as long as the host lives. They are named so they cannot be mistaken for
 // a backup and are not counted against the retention limit.
 func sweepPartials(dir string) {
-	matches, _ := filepath.Glob(filepath.Join(dir, ".backpack-backup-*.partial"))
+	matches, _ := filepath.Glob(filepath.Join(dir, ".ani-tunnel-backup-*.partial"))
+	legacy, _ := filepath.Glob(filepath.Join(dir, "."+compat.LegacyBackupPrefix+"*.partial"))
+	matches = append(matches, legacy...)
 	for _, path := range matches {
 		info, err := os.Stat(path)
 		if err != nil || time.Since(info.ModTime()) < partialAge {
@@ -232,7 +249,7 @@ func sweepPartials(dir string) {
 // are pruned.
 // It is written to a temporary file in the same directory and renamed into
 // place once it is complete and on disk, so a name matching
-// backpack-backup-*.tar.gz is always a whole archive. Writing straight to the
+// ani-tunnel-backup-*.tar.gz is always a whole archive. Writing straight to the
 // final name meant an interrupted backup — a full disk, a reboot, a killed
 // process — left a truncated file sitting under a name that says otherwise,
 // which pruning then counts as one of the ten kept and a restore accepts as
@@ -250,7 +267,7 @@ func publishBackup(dir string, write func(io.Writer) error) (string, error) {
 		return "", err
 	}
 
-	tmp, err := os.CreateTemp(dir, ".backpack-backup-*.partial")
+	tmp, err := os.CreateTemp(dir, ".ani-tunnel-backup-*.partial")
 	if err != nil {
 		return "", err
 	}
@@ -305,9 +322,9 @@ func publishBackup(dir string, write func(io.Writer) error) (string, error) {
 func freeBackupPath(dir string) (string, error) {
 	stamp := time.Now().Format("20060102-150405")
 	for n := 0; n < 100; n++ {
-		name := fmt.Sprintf("backpack-backup-%s.tar.gz", stamp)
+		name := fmt.Sprintf("ani-tunnel-backup-%s.tar.gz", stamp)
 		if n > 0 {
-			name = fmt.Sprintf("backpack-backup-%s-%d.tar.gz", stamp, n)
+			name = fmt.Sprintf("ani-tunnel-backup-%s-%d.tar.gz", stamp, n)
 		}
 		path := filepath.Join(dir, name)
 		if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -349,7 +366,7 @@ func Restore(r io.Reader) (RestoreResult, error) {
 	// Beside the config directory, so the commit is a rename rather than a copy
 	// across filesystems — and so a restore cannot half-succeed for want of
 	// space somewhere else.
-	stage, err := os.MkdirTemp(filepath.Dir(app.ConfigDir), ".backpack-restore-*")
+	stage, err := os.MkdirTemp(filepath.Dir(app.ConfigDir), ".ani-tunnel-restore-*")
 	if err != nil {
 		return res, err
 	}

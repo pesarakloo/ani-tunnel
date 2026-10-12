@@ -75,7 +75,7 @@ auto_mtu = false
 Start the Kharej first, then Iran, using a separate terminal on each host:
 
 ```sh
-sudo timeout --signal=TERM 600 backpack -c /root/bp-check.toml
+sudo timeout --signal=TERM 600 ani-tunnel -c /root/bp-check.toml
 ```
 
 On Iran, `ping -I bpcheck0 -c 300 -i 1 10.233.151.2` checks five minutes of
@@ -108,4 +108,4 @@ TCP/UDP برقرار نشده است؛ نتیجهٔ همهٔ پروتکل‌ها
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

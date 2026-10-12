@@ -37,7 +37,7 @@ func TestAKharejMadeFromTheSetupLinkCarriesTraffic(t *testing.T) {
 	if testing.Short() {
 		t.Skip("builds and runs the engine; skipped under -short")
 	}
-	bin := filepath.Join(t.TempDir(), "backpack")
+	bin := filepath.Join(t.TempDir(), "ani-tunnel")
 	build := exec.Command("go", "build", "-o", bin, "../..")
 	build.Stderr = os.Stderr
 	if err := build.Run(); err != nil {
@@ -365,7 +365,7 @@ func TestAKharejFromALinkFailsOverToTheLinksBackupAddress(t *testing.T) {
 	if testing.Short() {
 		t.Skip("builds and runs the engine; skipped under -short")
 	}
-	bin := filepath.Join(t.TempDir(), "backpack")
+	bin := filepath.Join(t.TempDir(), "ani-tunnel")
 	build := exec.Command("go", "build", "-o", bin, "../..")
 	build.Stderr = os.Stderr
 	if err := build.Run(); err != nil {

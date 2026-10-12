@@ -2,7 +2,7 @@
 
 Everything in one portable `.tar.gz`: every tunnel and token, the web-panel
 password, Telegram settings, TLS certificates, and the auto-refresh schedule.
-Backups live in `/root/BackPack/backups`.
+Backups live in `/root/ani-tunnel/backups`.
 
 ## Restoring onto a different machine
 
@@ -59,7 +59,7 @@ from where the backup left off rather than resetting to zero.
 
 همه‌چیز در یک فایل `.tar.gz` قابل‌حمل: تمام تونل‌ها و توکن‌ها، رمز پنل وب،
 تنظیمات تلگرام، گواهی‌های TLS و زمان‌بندی ری‌فرش خودکار. فایل‌ها در
-`/root/BackPack/backups` ذخیره می‌شوند.
+`/root/ani-tunnel/backups` ذخیره می‌شوند.
 
 **بازگردانی** همهٔ تونل‌ها را دوباره ثبت و استارت می‌کند و آمار ترافیک از همان
 جایی که بوده ادامه پیدا می‌کند، نه از صفر.
@@ -77,7 +77,7 @@ from where the backup left off rather than resetting to zero.
 
 ## Getting a backup off the machine
 
-Backups are written to `/var/backups/backpack` — on the server they describe.
+Backups are written to `/var/backups/ani-tunnel` — on the server they describe.
 The case they exist for is the case where that server is gone, so a copy
 somewhere else is the only one that will be there.
 
@@ -85,8 +85,8 @@ somewhere else is the only one that will be there.
 `{}` standing for the backup file's path:
 
 ```
-rclone copy {} remote:backpack/
-scp {} backup@10.0.0.9:/srv/backpack/
+rclone copy {} remote:ani-tunnel/
+scp {} backup@10.0.0.9:/srv/ani-tunnel/
 restic backup {}
 ```
 
@@ -136,4 +136,4 @@ Run it after any change to what the machine holds, and once before you need it.
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

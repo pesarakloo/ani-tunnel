@@ -24,7 +24,7 @@ import (
 	"github.com/pesarakloo/ani-tunnel/internal/sysstat"
 )
 
-const cronMarker = "backpack-telegram"
+var cronMarker = app.ServicePrefix + "telegram"
 
 // Config is the persisted Telegram bot configuration.
 type Config struct {
@@ -389,7 +389,7 @@ func webPanelInfo() (password, url string) {
 }
 
 // SendStatusNow sends the current status to the configured admin. Called by
-// the `backpack --telegram-report` cron job.
+// the `ani-tunnel --telegram-report` cron job.
 func SendStatusNow() error {
 	c := Load()
 	if c.Token == "" || c.AdminID == "" {
@@ -768,7 +768,7 @@ func sendBackup(c Config) error {
 		return fmt.Errorf("could not build the backup: %w", err)
 	}
 
-	name := fmt.Sprintf("backpack-backup-%s.tar.gz", time.Now().Format("2006-01-02-1504"))
+	name := fmt.Sprintf("ani-tunnel-backup-%s.tar.gz", time.Now().Format("2006-01-02-1504"))
 	caption := "🔐 Full backup — every tunnel and token, the panel password, " +
 		"Telegram settings and certificates.\n\nKeep it private: anyone with this " +
 		"file can connect to your tunnels."

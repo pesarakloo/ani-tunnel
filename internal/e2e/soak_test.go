@@ -32,11 +32,11 @@ import (
 // exercises the per-connection accounting where both leaks lived — a single
 // long download allocates its buffers once and tells you nothing.
 //
-// Off by default. BACKPACK_SOAK_SECONDS is what turns it on, so the ordinary
+// Off by default. ANI_TUNNEL_SOAK_SECONDS is what turns it on, so the ordinary
 // suite stays fast and CI can give it a couple of minutes without anybody
 // waiting on a laptop.
 
-const soakEnv = "BACKPACK_SOAK_SECONDS"
+const soakEnv = "ANI_TUNNEL_SOAK_SECONDS"
 
 func TestASustainedRunDoesNotLeak(t *testing.T) {
 	seconds, _ := strconv.Atoi(os.Getenv(soakEnv))

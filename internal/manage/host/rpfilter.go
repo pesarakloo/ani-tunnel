@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/tui"
 	"github.com/pesarakloo/ani-tunnel/internal/utils/network"
 )
@@ -15,7 +16,7 @@ import (
 // the file Optimize writes rather than inside it: this is a spoof-only change an
 // operator opted into for one tunnel, not part of the general tuning, and a
 // separate file is one they can read and delete on its own.
-const rpFilterSysctlFile = "/etc/sysctl.d/99-backpack-spoof.conf"
+var rpFilterSysctlFile = compat.ExistingPath("/etc/sysctl.d/99-ani-tunnel-spoof.conf", "/etc/sysctl.d/99-backpack-spoof.conf")
 
 // OfferRelaxRPFilter checks whether reverse-path filtering will drop this
 // machine's forged-source packets and, if it will, offers to relax it — the one

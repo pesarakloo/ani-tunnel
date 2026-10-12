@@ -67,7 +67,7 @@ func TestEveryDialerRetryBacksOff(t *testing.T) {
 }
 
 func TestKCPClientDNSStopsWithItsDialAttempt(t *testing.T) {
-	if mode := os.Getenv("BACKPACK_KCP_DNS_AUDIT"); mode != "" {
+	if mode := os.Getenv("ANI_TUNNEL_KCP_DNS_AUDIT"); mode != "" {
 		parts := strings.Split(mode, ":")
 		started, release := make(chan struct{}, 2), make(chan struct{})
 		defer close(release)
@@ -136,7 +136,7 @@ func TestKCPClientDNSStopsWithItsDialAttempt(t *testing.T) {
 				ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 				defer cancel()
 				cmd := exec.CommandContext(ctx, executable, "-test.run=^TestKCPClientDNSStopsWithItsDialAttempt$", "-test.timeout=6s")
-				cmd.Env = append(os.Environ(), "BACKPACK_KCP_DNS_AUDIT="+carrier+":"+kind)
+				cmd.Env = append(os.Environ(), "ANI_TUNNEL_KCP_DNS_AUDIT="+carrier+":"+kind)
 				if out, err := cmd.CombinedOutput(); err != nil {
 					t.Fatalf("isolated %s %s: %v\n%s", carrier, kind, err, out)
 				}

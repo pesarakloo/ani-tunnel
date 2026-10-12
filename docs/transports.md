@@ -87,7 +87,7 @@ token = "REPLACE-WITH-A-RANDOM-SHARED-TOKEN"
 ports = ["8080=127.0.0.1:8081"]
 accept_udp = false
 [server.naive]
-binary = "/usr/local/lib/backpack/helpers/sing-box/v1.14.2-amd64/sing-box"
+binary = "/usr/local/lib/ani-tunnel/helpers/sing-box/v1.14.2-amd64/sing-box"
 listen = "0.0.0.0:443"
 username = "REPLACE-WITH-A-PRIVATE-USERNAME"
 password = "REPLACE-WITH-A-RANDOM-PASSWORD"
@@ -102,7 +102,7 @@ remote_addr = "127.0.0.1:3080"
 transport = "tcp"
 token = "REPLACE-WITH-A-RANDOM-SHARED-TOKEN"
 [client.naive]
-binary = "/usr/local/lib/backpack/helpers/naive/v154.0.8037.49-4-amd64/naive"
+binary = "/usr/local/lib/ani-tunnel/helpers/naive/v154.0.8037.49-4-amd64/naive"
 server = "tunnel.example.com:443"
 username = "REPLACE-WITH-A-PRIVATE-USERNAME"
 password = "REPLACE-WITH-A-RANDOM-PASSWORD"
@@ -128,7 +128,7 @@ route compatibility must be tested on the intended deployment.
 
 ```toml
 [server.xray]
-binary = "/usr/local/lib/backpack/helpers/xray/v26.3.27-amd64/xray"
+binary = "/usr/local/lib/ani-tunnel/helpers/xray/v26.3.27-amd64/xray"
 listen = "0.0.0.0:443"
 mode = "xhttp"
 uuid = "REPLACE-WITH-A-CANONICAL-UUID"
@@ -140,7 +140,7 @@ key = "/etc/letsencrypt/live/tunnel.example.com/privkey.pem"
 
 ```toml
 [client.xray]
-binary = "/usr/local/lib/backpack/helpers/xray/v26.3.27-amd64/xray"
+binary = "/usr/local/lib/ani-tunnel/helpers/xray/v26.3.27-amd64/xray"
 server = "tunnel.example.com:443"
 mode = "xhttp"
 uuid = "REPLACE-WITH-A-CANONICAL-UUID"
@@ -468,4 +468,4 @@ UDP را می‌بندد ولی ICMP را نه) و *IP Spoofing* که مبدأ �
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

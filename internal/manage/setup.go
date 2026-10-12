@@ -115,7 +115,7 @@ func clearManagedTransport(s *TunnelSpec) {
 
 func managedHelperPath(tool string) string {
 	version := map[string]string{"naive": "v154.0.8037.49-4", "sing-box": "v1.14.2", "xray": "v26.3.27"}[tool]
-	return filepath.Join("/usr/local/lib/backpack/helpers", tool, version+"-"+runtime.GOARCH, tool)
+	return filepath.Join(app.HelperDir+"/helpers", tool, version+"-"+runtime.GOARCH, tool)
 }
 
 func defaultString(value, fallback string) string {
@@ -279,7 +279,7 @@ func setupManagedCarrierWithProbe(s *TunnelSpec, chosen, public, host string, pr
 			x := s.NaiveServer
 			x.Binary = tui.PromptDefault("Sing-Box Binary", defaultString(x.Binary, managedHelperPath("sing-box")))
 			x.Listen = public
-			x.Username = tui.PromptDefault("Naive Username (Same On Kharej)", defaultString(x.Username, "backpack"))
+			x.Username = tui.PromptDefault("Naive Username (Same On Kharej)", defaultString(x.Username, "ani-tunnel"))
 			x.Password = managedSecret("Naive Password (Same On Kharej)", x.Password, randomToken(32))
 			var ok bool
 			x.Certificate, x.Key, ok = managedCertificate(n, host, x.Certificate, x.Key)
@@ -291,7 +291,7 @@ func setupManagedCarrierWithProbe(s *TunnelSpec, chosen, public, host string, pr
 			x := s.NaiveClient
 			x.Binary = tui.PromptDefault("NaiveProxy Binary", defaultString(x.Binary, managedHelperPath("naive")))
 			x.Server = public
-			x.Username = tui.PromptDefault("Naive Username (From Iran)", defaultString(x.Username, "backpack"))
+			x.Username = tui.PromptDefault("Naive Username (From Iran)", defaultString(x.Username, "ani-tunnel"))
 			x.Password = managedSecret("Naive Password (From Iran)", x.Password, "")
 			x.CAFile = tui.PromptDefault("CA File (Required For A Private Certificate; Empty For Public TLS)", x.CAFile)
 			n.NaiveClient = x

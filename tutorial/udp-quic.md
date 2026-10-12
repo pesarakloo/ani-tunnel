@@ -40,7 +40,7 @@ The [TCP walkthrough](tcp.md), with **`UDP` → `UDP + QUIC`** on both ends.
 
 1. Build both ends and watch **Manage → Status** for a minute.
 2. If the client keeps dialling and the server never shows a peer, read the log:
-   `journalctl -u backpack-<name> -f`. A handshake that never completes is the
+   `journalctl -u ani-tunnel-<name> -f`. A handshake that never completes is the
    documented failure mode.
 3. Compare against KCP on the same route: **Manage → Link Test** on the kharej
    server gives you a measured recommendation rather than a guess.

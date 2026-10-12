@@ -479,7 +479,7 @@ func TestProxyDialDeadlineIsClearedAfterSuccess(t *testing.T) {
 // Source lookup shares the budget with proxy setup. Run separately so replacing
 // net.DefaultResolver cannot affect another test's still-closing sockets.
 func TestTCPDialBudgetIncludesSourceDNS(t *testing.T) {
-	if os.Getenv("BACKPACK_SOURCE_DNS_AUDIT") != "1" {
+	if os.Getenv("ANI_TUNNEL_SOURCE_DNS_AUDIT") != "1" {
 		executable, err := os.Executable()
 		if err != nil {
 			t.Fatal(err)
@@ -487,7 +487,7 @@ func TestTCPDialBudgetIncludesSourceDNS(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		cmd := exec.CommandContext(ctx, executable, "-test.run=^TestTCPDialBudgetIncludesSourceDNS$", "-test.timeout=8s")
-		cmd.Env = append(os.Environ(), "BACKPACK_SOURCE_DNS_AUDIT=1")
+		cmd.Env = append(os.Environ(), "ANI_TUNNEL_SOURCE_DNS_AUDIT=1")
 		if output, err := cmd.CombinedOutput(); err != nil {
 			t.Fatalf("isolated source DNS: %v\n%s", err, output)
 		}

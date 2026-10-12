@@ -176,7 +176,7 @@ var systemMigrations = []systemMigration{
 		// Live only. Nothing persists this — the engine set it with `sysctl -w`
 		// on every start and it did not survive a reboot either, so there is no
 		// file to correct. A machine that ran Optimize has the right value in
-		// /etc/sysctl.d/99-backpack.conf already, and ApplyUpdate re-applies that
+		// /etc/sysctl.d/99-ani-tunnel.conf already, and ApplyUpdate re-applies that
 		// file just before this runs.
 		id: "ephemeral-port-range",
 		apply: func() string {

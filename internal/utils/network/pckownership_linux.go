@@ -12,6 +12,8 @@ import (
 	"strings"
 
 	"golang.org/x/sys/unix"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 type pckOwner struct {
@@ -188,7 +190,7 @@ func otherPckProcess(id string) bool {
 func pckExecutable(root string) bool {
 	path := root + "/exe"
 	exe, _ := os.Readlink(path)
-	if strings.Contains(filepath.Base(exe), "backpack") {
+	if strings.Contains(filepath.Base(exe), "ani-tunnel") || strings.Contains(filepath.Base(exe), compat.LegacyBinary) {
 		return true
 	}
 	info, err := buildinfo.ReadFile(path)

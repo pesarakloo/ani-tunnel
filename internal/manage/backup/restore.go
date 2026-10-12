@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/manage/core"
 	"io"
 	"os"
@@ -93,7 +94,7 @@ func stageRestore(r io.Reader, configDir, stage string) (restoreContents, error)
 		}
 
 		// Sidecar: parse for out-of-tree settings, never write it to disk.
-		if hdr.Name == backupMetaName {
+		if hdr.Name == backupMetaName || hdr.Name == compat.LegacyBackupMeta {
 			var m backupMeta
 			if data, err := io.ReadAll(io.LimitReader(tr, maxRestoreFileBytes)); err == nil {
 				if err := json.Unmarshal(data, &m); err != nil {

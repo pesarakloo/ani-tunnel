@@ -35,7 +35,7 @@ import (
 //   - when descriptors are free again, the tunnel carries traffic without
 //     anybody restarting it.
 
-const fdChaosEnv = "BACKPACK_FD_CHAOS_CHILD"
+const fdChaosEnv = "ANI_TUNNEL_FD_CHAOS_CHILD"
 
 func TestATunnelSurvivesRunningOutOfFileDescriptors(t *testing.T) {
 	if os.Getenv(fdChaosEnv) == "1" {

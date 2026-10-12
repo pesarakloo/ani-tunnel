@@ -24,7 +24,7 @@ func writeTestPair(t *testing.T, dir string) (certFile, keyFile string) {
 	}
 	tmpl := x509.Certificate{
 		SerialNumber: big.NewInt(1),
-		Subject:      pkix.Name{CommonName: "backpack-test"},
+		Subject:      pkix.Name{CommonName: "ani-tunnel-test"},
 		NotBefore:    time.Now().Add(-time.Hour),
 		NotAfter:     time.Now().Add(24 * time.Hour),
 		DNSNames:     []string{"nothing.invalid"},

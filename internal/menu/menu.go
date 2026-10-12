@@ -1,4 +1,4 @@
-// Package menu implements the interactive backpack CLI shown when the binary
+// Package menu implements the interactive ani-tunnel CLI shown when the binary
 // is run without a config file.
 package menu
 

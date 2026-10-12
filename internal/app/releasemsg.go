@@ -1,5 +1,7 @@
 package app
 
+import "github.com/pesarakloo/ani-tunnel/internal/compat"
+
 // ReleaseSignedMessage is what a release signature covers: the release's tag,
 // then its checksum list.
 //
@@ -15,8 +17,8 @@ package app
 // No release was ever published with the older form: the key and this format
 // arrive in the same version.
 func ReleaseSignedMessage(tag string, sums []byte) []byte {
-	msg := make([]byte, 0, len("backpack release \n")+len(tag)+len(sums))
-	msg = append(msg, "backpack release "...)
+	msg := make([]byte, 0, len(compat.ReleaseDomain)+1+len(tag)+len(sums))
+	msg = append(msg, compat.ReleaseDomain...)
 	msg = append(msg, tag...)
 	msg = append(msg, '\n')
 	return append(msg, sums...)

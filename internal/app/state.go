@@ -83,6 +83,6 @@ func Unreadable(path string, data []byte, why error) error {
 // way; this is so the operator can learn why.
 func WarnState(err error) {
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "backpack: warning:", err)
+		fmt.Fprintln(os.Stderr, "ani-tunnel: warning:", err)
 	}
 }

@@ -59,7 +59,7 @@ Prometheus:
 
 ```yaml
 scrape_configs:
-  - job_name: backpack
+  - job_name: ani-tunnel
     authorization:
       credentials: <token>
     static_configs:
@@ -93,7 +93,7 @@ not follow). Every line forwarded to Telegram carries the head of the chain at
 that moment, so even a rewrite that recomputes the whole chain disagrees with
 the numbers already sitting in Telegram, out of the intruder's reach.
 
-The record lives at `/etc/backpack/audit.json`, holds the last 5,000 entries,
+The record lives at `/etc/ani-tunnel/audit.json`, holds the last 5,000 entries,
 and is readable only by root. An audit file that cannot be written never blocks
 an action — a full disk must not lock an operator out of the tool they need to
 fix it.
@@ -135,7 +135,7 @@ curl -H "Authorization: Bearer <token>" https://panel:8443/metrics
 شود، تنها راهِ عمل‌کردن بدون ثبت‌شدن، عمل‌کردن بدون مجوز است.
 **خواندن‌ها ثبت نمی‌شوند** — پنل هر چند ثانیه خودش را poll می‌کند و هزاران خطِ آن،
 آن چند خطی را که مهم است دفن می‌کند. **تلاش‌های ردشده ثبت می‌شوند** و اغلب همان‌ها
-خط جالب‌ترند. سابقه در `/etc/backpack/audit.json` است، ۵۰۰۰ ورودی آخر را نگه
+خط جالب‌ترند. سابقه در `/etc/ani-tunnel/audit.json` است، ۵۰۰۰ ورودی آخر را نگه
 می‌دارد و فقط root می‌تواند بخواندش. فایل سابقه‌ای که نوشته نشود **هیچ‌وقت** جلوی
 یک عمل را نمی‌گیرد — دیسک پر نباید اپراتور را از ابزاری که برای درست‌کردنش لازم
 دارد بیرون بگذارد.
@@ -147,4 +147,4 @@ curl -H "Authorization: Bearer <token>" https://panel:8443/metrics
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

@@ -50,7 +50,7 @@ func testCert(t *testing.T) (certPath, keyPath string) {
 }
 
 func generateTestCert() (certPath, keyPath string, err error) {
-	dir, err := os.MkdirTemp("", "backpack-e2e-tls-")
+	dir, err := os.MkdirTemp("", "ani-tunnel-e2e-tls-")
 	if err != nil {
 		return "", "", err
 	}
@@ -68,7 +68,7 @@ func generateTestCert() (certPath, keyPath string, err error) {
 
 	tmpl := x509.Certificate{
 		SerialNumber:          serial,
-		Subject:               pkix.Name{CommonName: "backpack-test"},
+		Subject:               pkix.Name{CommonName: "ani-tunnel-test"},
 		NotBefore:             time.Now().Add(-time.Hour),
 		NotAfter:              time.Now().Add(24 * time.Hour),
 		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,

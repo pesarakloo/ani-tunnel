@@ -1035,7 +1035,7 @@ export function settingsView(ctx) {
          the weekly backup is on and nothing else — so it was a date and a size
          invented by the preview and shown as fact. It now says the one thing
          that is actually known. */
-      /* The bot's status line named a bot — "Connected as @my_backpack_bot" —
+      /* The bot's status line named a bot — "Connected as @my_ani_tunnel_bot" —
          that belongs to whoever drew the screen. What is known is whether a
          token and an admin are set, and the masked hint for the token. */
       const tgState = root.querySelector('[data-p="telegram"] .state2');

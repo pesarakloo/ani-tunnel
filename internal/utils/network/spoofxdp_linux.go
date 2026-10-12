@@ -104,7 +104,7 @@ func newSpoofXDPReceiver(c spoofXDPConfig) (*spoofXDPReceiver, error) {
 	}
 
 	prog, err := ebpf.NewProgram(&ebpf.ProgramSpec{
-		Name:         "backpack_spoof",
+		Name:         "ani_spoof",
 		Type:         ebpf.XDP,
 		License:      "GPL", // the ringbuf and xdp_load_bytes helpers are GPL-only
 		Instructions: buildXDPProgram(c, ring.FD()),

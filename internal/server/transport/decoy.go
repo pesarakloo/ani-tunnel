@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 // The identity the decoy site wears.
@@ -85,7 +87,7 @@ const (
 func newDecoyProfile(token string) decoyProfile {
 	// Domain-separated from every other thing the token keys, so that publishing
 	// a decoy's ETag can never leak anything about the credential itself.
-	h := sha256.Sum256([]byte("backpack-decoy\x00" + token))
+	h := sha256.Sum256([]byte(compat.DecoyLabel + token))
 
 	build := nginxBuilds[int(h[0])%len(nginxBuilds)]
 

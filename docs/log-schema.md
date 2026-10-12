@@ -1,7 +1,7 @@
 # Shipping logs off the server
 
 ani tunnel logs to stdout, systemd puts that in journald, and on one server
-`journalctl -u backpack-<name>` is the whole story. With five servers it is five
+`journalctl -u ani-tunnel-<name>` is the whole story. With five servers it is five
 journals, and the question "which tunnel dropped at 03:10 last night" needs five
 answers stitched together.
 
@@ -70,12 +70,12 @@ file.
 
 ```yaml
 scrape_configs:
-  - job_name: backpack
+  - job_name: ani-tunnel
     journal:
-      labels: { job: backpack }
+      labels: { job: ani-tunnel }
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
-        regex: 'backpack-.*'
+        regex: 'ani-tunnel-.*'
         action: keep
       - source_labels: ['__journal__hostname']
         target_label: 'host'
@@ -88,22 +88,22 @@ scrape_configs:
 **Vector**:
 
 ```toml
-[sources.backpack]
+[sources.ani-tunnel]
 type = "journald"
-include_units = ["backpack-fr-relay", "backpack-de-relay"]
+include_units = ["ani-tunnel-fr-relay", "ani-tunnel-de-relay"]
 
 [transforms.parsed]
 type = "remap"
-inputs = ["backpack"]
+inputs = ["ani-tunnel"]
 source = '. |= object!(parse_json!(.message))'
 ```
 
 With either, the queries that were five journals become one:
 
 ```
-{job="backpack", level="error"}                  every error in the fleet
-{job="backpack", tunnel="fr-relay"} |= "restart" one tunnel's restarts
-{job="backpack", transport="quic", level="warn"} one carrier, everywhere
+{job="ani-tunnel", level="error"}                  every error in the fleet
+{job="ani-tunnel", tunnel="fr-relay"} |= "restart" one tunnel's restarts
+{job="ani-tunnel", transport="quic", level="warn"} one carrier, everywhere
 ```
 
 ## What not to expect
@@ -126,7 +126,7 @@ With either, the queries that were five journals become one:
 ## خلاصهٔ فارسی
 
 ani tunnel روی stdout لاگ می‌نویسد، systemd آن را در journald می‌گذارد، و روی یک
-سرور `journalctl -u backpack-<name>` همهٔ داستان است. با پنج سرور می‌شود پنج
+سرور `journalctl -u ani-tunnel-<name>` همهٔ داستان است. با پنج سرور می‌شود پنج
 journal، و سؤال «کدام تونل دیشب ساعت ۳:۱۰ افتاد» پنج جواب می‌خواهد که باید به هم
 دوخته شوند.
 
@@ -165,4 +165,4 @@ vector در بالا آمده؛ هر دو journald را می‌خوانند.
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

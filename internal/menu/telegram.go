@@ -181,7 +181,7 @@ func configureAlerts(cfg telegram.Config) {
 }
 
 // configureTelegram sets up the bot. On an Iran server Telegram is blocked, so
-// the primary path relays traffic through a tunnel: backpack forwards a
+// the primary path relays traffic through a tunnel: ani-tunnel forwards a
 // loopback port on the chosen tunnel straight to api.telegram.org and sends
 // every bot request through it, with the peer making the outbound connection.
 func configureTelegram(cfg telegram.Config) {

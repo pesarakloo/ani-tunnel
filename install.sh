@@ -5,7 +5,7 @@
 #   bash <(curl -fsSL https://raw.githubusercontent.com/pesarakloo/ani-tunnel/main/install.sh)
 #
 # It downloads the prebuilt release tar.gz for this architecture into
-# /root/BackPack and installs the binary, verifying it against the checksum
+# /root/ani-tunnel and installs the binary, verifying it against the checksum
 # published with the release. If run inside a source checkout and the download
 # fails, it builds from source as a last resort.
 # BP_BUILD_FROM_SOURCE=1 deliberately installs this checkout's build instead
@@ -28,8 +28,19 @@ warn() { echo -e "${GRAY}[!]${NC} $*"; }
 err()  { echo -e "${RED}[x]${NC} $*" >&2; }
 
 REPO="pesarakloo/ani-tunnel"
-BIN_PATH="/usr/local/bin/backpack"
-INSTALL_DIR="/root/BackPack"
+BIN_PATH="/usr/local/bin/ani-tunnel"
+INSTALL_DIR="/root/ani-tunnel"
+CONFIG_DIR="/etc/ani-tunnel"
+HELPER_DIR="/usr/local/lib/ani-tunnel"
+# Compatibility with releases that used the upstream filesystem layout. Do not
+# move live configurations or replace the command alias instead of its target.
+[[ -e "$CONFIG_DIR" || ! -d /etc/backpack ]] || CONFIG_DIR="/etc/backpack"
+[[ -e "$INSTALL_DIR" || ! -d /root/BackPack ]] || INSTALL_DIR="/root/BackPack"
+[[ -e "$HELPER_DIR" || ! -d /usr/local/lib/backpack ]] || HELPER_DIR="/usr/local/lib/backpack"
+if [[ -L "$BIN_PATH" && "$(readlink -f "$BIN_PATH")" == /usr/local/bin/backpack ]] ||
+   [[ ! -e "$BIN_PATH" && -f /usr/local/bin/backpack ]]; then
+  BIN_PATH="/usr/local/bin/backpack"
+fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-/tmp}")" 2>/dev/null && pwd || echo /tmp)"
 
 # Which Go the source build needs, and the oldest toolchain already on the
@@ -73,11 +84,11 @@ fi
 
 # One thing may follow the script: a setup link to apply once ani tunnel is in.
 #
-#   bash <(curl -fsSL …/install.sh) link apply 'backpack://…'
+#   bash <(curl -fsSL …/install.sh) link apply 'ani-tunnel://…'
 #
 # That is the line the Iran server prints for a kharej that does not run
 # ani tunnel yet: install, then build the tunnel the link describes, with nothing
-# asked. A leading "backpack" is accepted too, since the line is often written
+# asked. A leading "ani-tunnel" is accepted too, since the line is often written
 # as the command it runs. Anything else is refused, as before.
 #
 # It used to accept `node --panel <host:port> --key <setup-key>`, which
@@ -85,14 +96,14 @@ fi
 # a managed server over its own SSH now, so there is nothing to enrol: the
 # operator adds the server from the panel and never touches this machine again.
 BP_ARGS=("$@")
-if [[ ${#BP_ARGS[@]} -gt 0 && ( "${BP_ARGS[0]}" == "backpack" || "${BP_ARGS[0]}" == "ani-tunnel" ) ]]; then
+if [[ ${#BP_ARGS[@]} -gt 0 && ( "${BP_ARGS[0]}" == "ani-tunnel" || "${BP_ARGS[0]}" == "backpack" ) ]]; then
   BP_ARGS=("${BP_ARGS[@]:1}")
 fi
 if [[ ${#BP_ARGS[@]} -gt 0 ]]; then
   if [[ "${BP_ARGS[0]}" != "link" || "${BP_ARGS[1]:-}" != "apply" || ${#BP_ARGS[@]} -lt 3 ]]; then
     err "Unknown argument: ${BP_ARGS[0]}"
     err "This script takes no arguments, or a setup link to apply after installing:"
-    err "  bash <(curl -fsSL …/install.sh) link apply 'backpack://…'"
+    err "  bash <(curl -fsSL …/install.sh) link apply 'ani-tunnel://…'"
     exit 2
   fi
 fi
@@ -177,7 +188,7 @@ helper_spec() {
 install_helper() (
   set -euo pipefail
   helper_spec "$1" "$ARCH" || exit 1
-  root="/usr/local/lib/backpack/helpers/$helper_tool"
+  root="$HELPER_DIR/helpers/$helper_tool"
   final="$root/$helper_version-$ARCH"
   if [[ -e "$final" || -L "$final" ]]; then
     info "Keeping existing helper directory: $final (configure its binary explicitly)"
@@ -224,7 +235,7 @@ install_helpers() {
 helpers_validate || exit $?
 
 ASSET="ani-tunnel_linux_${ARCH}.tar.gz"
-mkdir -p /etc/backpack "$INSTALL_DIR/backups"
+mkdir -p "$CONFIG_DIR" "$INSTALL_DIR/backups"
 chmod 700 "$INSTALL_DIR/backups"
 
 # Build/extract away from the running executable. The service path and config
@@ -232,7 +243,7 @@ chmod 700 "$INSTALL_DIR/backups"
 LIVE_BIN_PATH="$BIN_PATH"
 ENGINE_STAGE="$(mktemp -d "$INSTALL_DIR/.ani-install.XXXXXX")"
 trap 'rm -rf -- "$ENGINE_STAGE"' EXIT
-BIN_PATH="$ENGINE_STAGE/backpack"
+BIN_PATH="$ENGINE_STAGE/ani-tunnel"
 
 commit_install() {
   local backup next unit version_output
@@ -243,32 +254,34 @@ commit_install() {
   fi
   backup="$(mktemp -d "$INSTALL_DIR/backups/ani-$(date -u +%Y%m%dT%H%M%SZ)-XXXXXX")" || return 1
   chmod 700 "$backup"
-  cp -a /etc/backpack "$backup/config" || return 1
-  [[ ! -f "$LIVE_BIN_PATH" ]] || cp -p "$LIVE_BIN_PATH" "$backup/backpack" || return 1
+  cp -a "$CONFIG_DIR" "$backup/config" || return 1
+  [[ ! -f "$LIVE_BIN_PATH" ]] || cp -p "$LIVE_BIN_PATH" "$backup/ani-tunnel" || return 1
   : > "$backup/running-services"
   if command -v systemctl >/dev/null 2>&1; then
     systemctl list-units --type=service --state=running --no-legend --no-pager 2>/dev/null |
-      awk '$1 ~ /^backpack-[A-Za-z0-9_.@-]+\.service$/ {print $1}' > "$backup/running-services" || true
+      awk '$1 ~ /^(ani-tunnel|backpack)-[A-Za-z0-9_.@-]+\.service$/ {print $1}' > "$backup/running-services" || true
   fi
   next="$(mktemp "$(dirname "$LIVE_BIN_PATH")/.ani-binary.XXXXXX")" || return 1
   if ! install -m 0755 "$BIN_PATH" "$next" || ! mv -f "$next" "$LIVE_BIN_PATH"; then
     rm -f -- "$next"
     return 1
   fi
-  ln -sfn "$LIVE_BIN_PATH" /usr/local/bin/ani-tunnel || return 1
+  if [[ "$LIVE_BIN_PATH" != /usr/local/bin/ani-tunnel ]]; then
+    ln -sfn "$LIVE_BIN_PATH" /usr/local/bin/ani-tunnel || return 1
+  fi
   info "Backup saved to $backup (configuration and previous binary)"
   while IFS= read -r unit; do
     if ! systemctl restart "$unit"; then
       warn "Restart failed for $unit. Restoring the previous binary."
-      if [[ -f "$backup/backpack" ]]; then
+      if [[ -f "$backup/ani-tunnel" ]]; then
         next="$(mktemp "$(dirname "$LIVE_BIN_PATH")/.ani-rollback.XXXXXX")" || return 1
-        install -m 0755 "$backup/backpack" "$next" && mv -f "$next" "$LIVE_BIN_PATH" || return 1
+        install -m 0755 "$backup/ani-tunnel" "$next" && mv -f "$next" "$LIVE_BIN_PATH" || return 1
         while IFS= read -r unit; do systemctl restart "$unit" || true; done < "$backup/running-services"
       fi
       return 1
     fi
   done < "$backup/running-services"
-  echo "$INSTALL_DIR" > /etc/backpack/install_path
+  echo "$INSTALL_DIR" > "$CONFIG_DIR/install_path"
   BIN_PATH="$LIVE_BIN_PATH"
 }
 
@@ -409,7 +422,10 @@ install_release() {
 install_binary_from_tar() {
   # Stream the named member into a regular file; never extract archive paths
   # or links into the installation directory.
-  tar -xOzf "$INSTALL_DIR/$ASSET" backpack > "$BIN_PATH" || return 1
+  # Old release archives are still usable for an offline upgrade or rollback.
+  if ! tar -xOzf "$INSTALL_DIR/$ASSET" ani-tunnel > "$BIN_PATH" 2>/dev/null; then
+    tar -xOzf "$INSTALL_DIR/$ASSET" backpack > "$BIN_PATH" || return 1
+  fi
   chmod 755 "$BIN_PATH"
 }
 

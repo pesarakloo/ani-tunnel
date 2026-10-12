@@ -91,9 +91,9 @@ func portFree(port int) bool {
 //
 // Binding 1080 unconditionally — which is what the monitor used to do — squats
 // the one port every other SOCKS proxy expects. On a box that also runs a panel
-// or an xray SOCKS inbound, backpack boots first, wins 1080, and the other
+// or an xray SOCKS inbound, ani-tunnel boots first, wins 1080, and the other
 // service quietly loses it; the panel's nodes then drop, and the operator ends
-// up reinstalling backpack to clear it. Since every current tunnel derives its
+// up reinstalling ani-tunnel to clear it. Since every current tunnel derives its
 // relay port from its token instead, the only thing that still needs 1080 is a
 // tunnel written before that change — one whose forwarded ports still map to
 // 127.0.0.1:1080. Nothing else, and no fresh install, has any reason to hold it.

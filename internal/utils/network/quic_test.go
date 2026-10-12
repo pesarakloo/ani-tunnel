@@ -280,7 +280,7 @@ func TestQUICInitialPacketFitsTheNarrowestCommonPath(t *testing.T) {
 }
 
 func TestQUICDialDNSStopsWithContext(t *testing.T) {
-	if kind := os.Getenv("BACKPACK_REVERSE_QUIC_DNS_AUDIT"); kind != "" {
+	if kind := os.Getenv("ANI_TUNNEL_REVERSE_QUIC_DNS_AUDIT"); kind != "" {
 		release := make(chan struct{})
 		var once sync.Once
 		unblock := func() { once.Do(func() { close(release) }) }
@@ -350,7 +350,7 @@ func TestQUICDialDNSStopsWithContext(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 			defer cancel()
 			cmd := exec.CommandContext(ctx, executable, "-test.run=^TestQUICDialDNSStopsWithContext$", "-test.timeout=6s")
-			cmd.Env = append(os.Environ(), "BACKPACK_REVERSE_QUIC_DNS_AUDIT="+kind)
+			cmd.Env = append(os.Environ(), "ANI_TUNNEL_REVERSE_QUIC_DNS_AUDIT="+kind)
 			if output, err := cmd.CombinedOutput(); err != nil {
 				t.Fatalf("isolated %s lookup: %v\n%s", kind, err, output)
 			}

@@ -1,6 +1,6 @@
 # ani tunnel v1.9.1 validation
 
-Source base: AminMGMT/BackPack `132467bfdfb2698d74ada2992413e75bfccbfbd3`
+Source base: AminMGMT/ani-tunnel `132467bfdfb2698d74ada2992413e75bfccbfbd3`
 (v1.9.0). Checks below were run on Linux amd64 with Go 1.26.9 while preparing
 this fork. They are local results, not a claim of live Iran–abroad validation.
 
@@ -31,7 +31,7 @@ heartbeats are covered by a regression test.
 | Five new loss, replacement and control-watchdog regression tests | Passed, including ten repetitions with the race detector |
 | Server transports, client transports and relay handlers with `-race` | Passed |
 | Ordinary end-to-end suite | Passed in about 305 seconds; includes transport traffic, reconnect, control adoption, failure and compatibility tests |
-| Sustained TCP traffic, `BACKPACK_SOAK_SECONDS=120` | Passed: 1,607,921 round trips, zero failed; goroutines averaged 60.4 early / 63.1 late, descriptors 74.3 / 78.8; both resource-growth assertions passed |
+| Sustained TCP traffic, `ANI_TUNNEL_SOAK_SECONDS=120` | Passed: 1,607,921 round trips, zero failed; goroutines averaged 60.4 early / 63.1 late, descriptors 74.3 / 78.8; both resource-growth assertions passed |
 | Installer in isolated temporary paths with fake systemd | Five tests passed: upgrade preserves config, previous binary backup, active-service restart with rollback, checksum refusal, fresh-install alias and empty-binary refusal |
 | Web panel, menu, application/version tests after branding | Passed; panel JavaScript tests run through the Go harness |
 | `go vet ./...` | Passed |
@@ -52,7 +52,7 @@ runs the complete suite on its Linux runner before publishing release assets.
 go test ./... -timeout 20m
 go test -race ./internal/server/transport ./internal/client/transport ./internal/utils/handlers -timeout 10m
 go test -race ./internal/server/transport -run 'Test(LostTCP|LostWS|ReplacedWS|SilentControl|RTTReplies)' -count=10
-BACKPACK_SOAK_SECONDS=120 go test ./internal/e2e -run '^TestASustainedRunDoesNotLeak$' -count=1 -v -timeout 3m
+ANI_TUNNEL_SOAK_SECONDS=120 go test ./internal/e2e -run '^TestASustainedRunDoesNotLeak$' -count=1 -v -timeout 3m
 python3 tools/validation/install_test.py
 go vet ./...
 ```
@@ -73,5 +73,5 @@ tests and embedded branding assets were checked.
 
 Upgrade both peers, verify user traffic after service restart and observe the
 tunnel over the previously failing interval. If a failure remains, preserve
-the relevant `journalctl -u backpack-<name>.service` output and redact tokens,
+the relevant `journalctl -u ani-tunnel-<name>.service` output and redact tokens,
 passwords and private keys before sharing it.

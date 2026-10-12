@@ -43,7 +43,7 @@ func SpoofTest() {
 }
 
 func spoofTestReceiver() {
-	token := tui.PromptDefault("Shared Token (Same On Both)", "backpack")
+	token := tui.PromptDefault("Shared Token (Same On Both)", "ani-tunnel")
 	port := tui.PromptInt("UDP Port", 45000)
 	attempts := tui.PromptInt("Probes Per IP (Same On Both)", 5)
 	windowSec := tui.PromptInt("Listen For (Seconds)", 30)
@@ -96,7 +96,7 @@ func spoofTestSender() {
 		tui.PressEnter()
 		return
 	}
-	token := tui.PromptDefault("Shared Token (Same On Both)", "backpack")
+	token := tui.PromptDefault("Shared Token (Same On Both)", "ani-tunnel")
 
 	var target net.IP
 	for {

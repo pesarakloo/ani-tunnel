@@ -18,7 +18,7 @@ import (
 )
 
 // certDir is where auto-generated self-signed certificates live.
-const certDir = app.ConfigDir + "/certs"
+var certDir = app.ConfigDir + "/certs"
 
 // EnsureSelfSignedCert generates (or reuses) a self-signed certificate/key pair
 // for a tunnel, used by the wss/wssmux transports. host may be a domain or IP
@@ -65,7 +65,7 @@ func writeSelfSigned(name string, ips []net.IP, dns []string) (certPath, keyPath
 
 	tmpl := x509.Certificate{
 		SerialNumber:          serial,
-		Subject:               pkix.Name{CommonName: "backpack", Organization: []string{"backpack"}},
+		Subject:               pkix.Name{CommonName: "ani-tunnel", Organization: []string{"ani-tunnel"}},
 		NotBefore:             time.Now().Add(-time.Hour),
 		NotAfter:              time.Now().AddDate(10, 0, 0),
 		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,

@@ -150,7 +150,7 @@ func TestUnitStateIsSharedBetweenPollers(t *testing.T) {
 
 	// GatherSystem and GatherTunnels, several tunnels, several panels.
 	for i := 0; i < 30; i++ {
-		if !c.Get("is-active\x00backpack-iran", ask) {
+		if !c.Get("is-active\x00ani-tunnel-iran", ask) {
 			t.Fatalf("call %d disagreed with the cached answer", i)
 		}
 	}

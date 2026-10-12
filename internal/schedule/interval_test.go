@@ -19,7 +19,7 @@ func TestEveryIntervalReadsBackAsItWasWritten(t *testing.T) {
 			t.Errorf("%dh produced no schedule", hours)
 			continue
 		}
-		got := intervalFromLine(spec + " /usr/local/bin/backpack --restart-all # bp-auto-refresh")
+		got := intervalFromLine(spec + " /usr/local/bin/ani-tunnel --restart-all # bp-auto-refresh")
 		if got != hours {
 			t.Errorf("%dh was written as %q and reads back as %dh", hours, spec, got)
 		}

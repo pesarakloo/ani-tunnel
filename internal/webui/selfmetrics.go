@@ -92,29 +92,29 @@ func instrument(next http.HandlerFunc) http.HandlerFunc {
 func writePanelMetrics(b *strings.Builder) {
 	p := panelMetrics
 
-	gauge(b, "backpack_panel_uptime_seconds", "How long this panel process has been running",
+	gauge(b, "ani_tunnel_panel_uptime_seconds", "How long this panel process has been running",
 		time.Since(p.started).Seconds())
 
-	counterHead(b, "backpack_panel_requests_total", "Requests served, by outcome")
-	fmt.Fprintf(b, "backpack_panel_requests_total{outcome=\"ok\"} %d\n", p.ok.Load())
-	fmt.Fprintf(b, "backpack_panel_requests_total{outcome=\"refused\"} %d\n", p.refused.Load())
-	fmt.Fprintf(b, "backpack_panel_requests_total{outcome=\"failed\"} %d\n", p.failed.Load())
+	counterHead(b, "ani_tunnel_panel_requests_total", "Requests served, by outcome")
+	fmt.Fprintf(b, "ani_tunnel_panel_requests_total{outcome=\"ok\"} %d\n", p.ok.Load())
+	fmt.Fprintf(b, "ani_tunnel_panel_requests_total{outcome=\"refused\"} %d\n", p.refused.Load())
+	fmt.Fprintf(b, "ani_tunnel_panel_requests_total{outcome=\"failed\"} %d\n", p.failed.Load())
 
 	n := p.requests.Load()
 	var mean float64
 	if n > 0 {
 		mean = float64(p.totalNanos.Load()) / float64(n) / 1e6
 	}
-	gauge(b, "backpack_panel_request_ms_mean", "Mean time to serve a request, milliseconds", mean)
-	gauge(b, "backpack_panel_request_ms_max", "Slowest request since this panel started, milliseconds",
+	gauge(b, "ani_tunnel_panel_request_ms_mean", "Mean time to serve a request, milliseconds", mean)
+	gauge(b, "ani_tunnel_panel_request_ms_max", "Slowest request since this panel started, milliseconds",
 		float64(p.maxNanos.Load())/1e6)
 
 	jobsMu.Lock()
 	done, failed := jobsDone, jobsFailed
 	jobsMu.Unlock()
-	counterHead(b, "backpack_panel_jobs_total", "Background jobs this panel has run, by outcome")
-	fmt.Fprintf(b, "backpack_panel_jobs_total{outcome=\"done\"} %d\n", done)
-	fmt.Fprintf(b, "backpack_panel_jobs_total{outcome=\"failed\"} %d\n", failed)
+	counterHead(b, "ani_tunnel_panel_jobs_total", "Background jobs this panel has run, by outcome")
+	fmt.Fprintf(b, "ani_tunnel_panel_jobs_total{outcome=\"done\"} %d\n", done)
+	fmt.Fprintf(b, "ani_tunnel_panel_jobs_total{outcome=\"failed\"} %d\n", failed)
 }
 
 // Job outcomes, counted where they are decided.

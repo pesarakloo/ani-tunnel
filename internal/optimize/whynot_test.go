@@ -14,8 +14,8 @@ func sandbox(t *testing.T) (etc string) {
 	etc = filepath.Join(dir, "sysctl.d")
 	os.MkdirAll(etc, 0o755)
 	oldF, oldL, oldD, oldP := sysctlFile, legacySysctlFile, sysctlDirs, procpsConf
-	sysctlFile = filepath.Join(etc, "zz-backpack.conf")
-	legacySysctlFile = filepath.Join(etc, "99-backpack.conf")
+	sysctlFile = filepath.Join(etc, "zz-ani-tunnel.conf")
+	legacySysctlFile = filepath.Join(etc, "99-ani-tunnel.conf")
 	sysctlDirs = []string{etc}
 	procpsConf = filepath.Join(dir, "sysctl.conf")
 	t.Cleanup(func() { sysctlFile, legacySysctlFile, sysctlDirs, procpsConf = oldF, oldL, oldD, oldP })

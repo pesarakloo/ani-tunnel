@@ -24,7 +24,7 @@ import (
 // was written before this existed.
 
 // twoFactorCookie carries the half-authenticated state.
-const twoFactorCookie = "backpack_2fa"
+const twoFactorCookie = "ani_tunnel_2fa"
 
 // twoFactorTTL is how long the code prompt stays open. Long enough to unlock a
 // phone and read six digits, short enough that a pending token left on a shared

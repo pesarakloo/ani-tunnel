@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// writeScriptArchive builds a release-shaped archive whose `backpack` is a
+// writeScriptArchive builds a release-shaped archive whose `ani-tunnel` is a
 // shell script that leaves a marker behind whenever it is run.
 func writeScriptArchive(t *testing.T, path, marker string) {
 	t.Helper()
@@ -20,7 +20,7 @@ func writeScriptArchive(t *testing.T, path, marker string) {
 	gz := gzip.NewWriter(f)
 	tw := tar.NewWriter(gz)
 	body := []byte("#!/bin/sh\ntouch '" + marker + "'\necho v9.9.9\n")
-	if err := tw.WriteHeader(&tar.Header{Name: "backpack", Mode: 0o755, Size: int64(len(body)), Typeflag: tar.TypeReg}); err != nil {
+	if err := tw.WriteHeader(&tar.Header{Name: "ani-tunnel", Mode: 0o755, Size: int64(len(body)), Typeflag: tar.TypeReg}); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := tw.Write(body); err != nil {

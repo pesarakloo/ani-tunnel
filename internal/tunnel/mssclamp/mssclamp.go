@@ -42,6 +42,8 @@
 // drift, so there is one of it.
 package mssclamp
 
+import "github.com/pesarakloo/ani-tunnel/internal/compat"
+
 import "strconv"
 
 // Off disables clamping entirely. Zero means automatic, so a distinct value is
@@ -140,7 +142,7 @@ func spec(kind, iface string, mss int) []string {
 		"-o", iface,
 		"-p", "tcp",
 		"--tcp-flags", "SYN,RST", "SYN",
-		"-m", "comment", "--comment", "backpack-" + kind + "-mss-" + iface,
+		"-m", "comment", "--comment", compat.LegacyServicePrefix + kind + "-mss-" + iface,
 		"-j", "TCPMSS",
 		"--set-mss", strconv.Itoa(mss),
 	}

@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/flynn/noise"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"golang.org/x/crypto/hkdf"
 )
 
@@ -50,11 +51,11 @@ import (
 const (
 	// l3Prologue is mixed into the handshake transcript by both ends and never
 	// travels on the wire.
-	l3Prologue = "backpack-l3-v1"
+	l3Prologue = compat.L3Prologue
 
 	// l3PSKLabel separates this protocol's key schedule from every other use
 	// of the same token.
-	l3PSKLabel = "backpack-l3-psk-v1"
+	l3PSKLabel = compat.L3PSKLabel
 )
 
 // Session lifetime.

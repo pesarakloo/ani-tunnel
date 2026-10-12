@@ -122,7 +122,7 @@ func LocalUpdateSearchedIn() []string { return localUpdateDirs() }
 // the flag, or a file that is not a release at all — returns "", and the caller
 // says so rather than inventing a number.
 func versionInArchive(archive string) string {
-	tmp, err := os.CreateTemp("", "backpack-check-*")
+	tmp, err := os.CreateTemp("", "ani-tunnel-check-*")
 	if err != nil {
 		return ""
 	}

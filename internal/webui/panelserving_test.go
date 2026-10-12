@@ -94,12 +94,12 @@ func TestThePanelHasNoSecondSourceOfData(t *testing.T) {
 	if err != nil {
 		t.Fatalf("the panel's api.js is not embedded: %v", err)
 	}
-	for _, gone := range []string{"__BACKPACK_LIVE__", "MOCK", "mock/"} {
+	for _, gone := range []string{"__ANI_TUNNEL_LIVE__", "MOCK", "mock/"} {
 		if strings.Contains(string(api), gone) {
 			t.Errorf("api.js has grown a second source of data again (%q)", gone)
 		}
 	}
-	if strings.Contains(string(panelIndex), "__BACKPACK_LIVE__") {
+	if strings.Contains(string(panelIndex), "__ANI_TUNNEL_LIVE__") {
 		t.Error("the served page still injects the mock-mode flag")
 	}
 	if _, err := fs.Stat(panelRoot, "mock"); err == nil {

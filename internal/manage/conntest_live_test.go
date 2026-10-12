@@ -26,7 +26,7 @@ func TestTheConnectionTestAcrossARealPath(t *testing.T) {
 	if os.Getenv("BP_L3_LIVE") == "" {
 		t.Skip("set BP_L3_LIVE=1 on a host that allows unprivileged user namespaces to run this")
 	}
-	bin := filepath.Join(t.TempDir(), "backpack")
+	bin := filepath.Join(t.TempDir(), "ani-tunnel")
 	build := exec.Command("go", "build", "-o", bin, "../..")
 	build.Stderr = os.Stderr
 	if err := build.Run(); err != nil {

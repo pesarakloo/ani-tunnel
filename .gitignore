@@ -1,5 +1,5 @@
 # Build artifacts
-/backpack
+/ani-tunnel
 # Compiled test binaries (go test -c). Two were committed once: 45 MB of
 # machine-specific ELF carrying the build machine's paths.
 *.test

@@ -87,7 +87,7 @@ type SystemStats struct {
 	TunnelsTotal   int `json:"tunnelsTotal"`
 	TunnelsRunning int `json:"tunnelsRunning"`
 
-	// MonitorRunning reports the backpack-monitor service — the watchdog, the
+	// MonitorRunning reports the ani-tunnel-monitor service — the watchdog, the
 	// Telegram bot and the alerts live there, not in this panel. When it is
 	// down, dropped tunnels are not restarted and no alert fires, and nothing
 	// else visibly breaks — which is exactly why the panel must say so.

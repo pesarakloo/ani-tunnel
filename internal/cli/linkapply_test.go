@@ -19,18 +19,18 @@ func TestLinkApplyTakesTheLinkAndSaysWhetherItConnected(t *testing.T) {
 	var gotOpts manage.LinkApplyOptions
 	applyLink = func(raw string, o manage.LinkApplyOptions) (manage.LinkApplied, error) {
 		gotLink, gotOpts = raw, o
-		return manage.LinkApplied{Name: "client-443", Service: "backpack-client-443.service", Kind: "reverse",
+		return manage.LinkApplied{Name: "client-443", Service: "ani-tunnel-client-443.service", Kind: "reverse",
 			Transport: "tcp", Dials: "203.0.113.7:443", Backups: []string{"iran.example.com:443"},
 			Active: true, RestartHours: 6, RestartMinute: 17}, nil
 	}
 	awaitLink = func(string, time.Duration) (bool, string) { return true, "" }
 
 	// A link the shell split in two, and both options.
-	r := Run([]string{"link", "apply", "--name", "k1", "--host=198.51.100.4", "backpack://abc", "def"})
+	r := Run([]string{"link", "apply", "--name", "k1", "--host=198.51.100.4", "ani-tunnel://abc", "def"})
 	if r.Code != CodeOK {
 		t.Fatalf("exit %d: %s", r.Code, r.Err)
 	}
-	if gotLink != "backpack://abcdef" || gotOpts.Name != "k1" || gotOpts.Host != "198.51.100.4" {
+	if gotLink != "ani-tunnel://abcdef" || gotOpts.Name != "k1" || gotOpts.Host != "198.51.100.4" {
 		t.Errorf("applied %q with %+v", gotLink, gotOpts)
 	}
 	for _, want := range []string{`"client-443"`, "203.0.113.7:443", "iran.example.com:443", "every 6 hours at :17 UTC", "Connected"} {
@@ -42,7 +42,7 @@ func TestLinkApplyTakesTheLinkAndSaysWhetherItConnected(t *testing.T) {
 	// Not connected within the wait is reported as such, with an exit a
 	// script can act on.
 	awaitLink = func(string, time.Duration) (bool, string) { return false, "control channel not up" }
-	if r := Run([]string{"link", "apply", "backpack://x"}); r.Code != CodeUnhealthy || !strings.Contains(r.Out, "Not connected yet") {
+	if r := Run([]string{"link", "apply", "ani-tunnel://x"}); r.Code != CodeUnhealthy || !strings.Contains(r.Out, "Not connected yet") {
 		t.Errorf("an unconnected tunnel: exit %d\n%s", r.Code, r.Out)
 	}
 }
@@ -56,7 +56,7 @@ func TestLinkApplyRefusesWhatItCannotDo(t *testing.T) {
 	}
 
 	isRoot = func() bool { return false }
-	if r := Run([]string{"link", "apply", "backpack://x"}); r.Code != CodeFailed || !strings.Contains(r.Err, "root") {
+	if r := Run([]string{"link", "apply", "ani-tunnel://x"}); r.Code != CodeFailed || !strings.Contains(r.Err, "root") {
 		t.Errorf("not root: exit %d %q", r.Code, r.Err)
 	}
 	isRoot = func() bool { return true }

@@ -10,7 +10,7 @@ import time
 def decode(value):
     return base64.urlsafe_b64decode(value + "=" * (-len(value) % 4))
 
-raw = decode(pathlib.Path(sys.argv[1]).read_text().removeprefix("backpack://t."))
+raw = decode(pathlib.Path(sys.argv[1]).read_text().removeprefix("ani-tunnel://t."))
 host = socket.inet_ntoa(raw[15:])
 port = int.from_bytes(raw[1:3], "big")
 token = base64.urlsafe_b64encode(raw[3:15]).decode().rstrip("=")

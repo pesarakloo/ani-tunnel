@@ -75,7 +75,7 @@ FEC scheme, `stealth`, the encapsulation.
 The fastest check is to read the two files side by side:
 
 ```
-sudo cat /etc/backpack/<name>.toml          # on this machine
+sudo cat /etc/ani-tunnel/<name>.toml          # on this machine
 ```
 
 and the same on the other. `token`, `transport`, the port, and — for a layer-3
@@ -123,7 +123,7 @@ stale.
 Then it is configuration, not the network. In order:
 
 ```
-ani-tunnel check -c /etc/backpack/<name>.toml
+ani-tunnel check -c /etc/ani-tunnel/<name>.toml
 ```
 
 This validates the file without starting anything, and it catches the quiet one:
@@ -193,8 +193,8 @@ Common causes, in order:
 ## The panel will not open
 
 ```
-systemctl status backpack-webui
-journalctl -u backpack-webui -n 50
+systemctl status ani-tunnel-webui
+journalctl -u ani-tunnel-webui -n 50
 ```
 
 The panel answers under a **secret path** and nowhere else, so a bookmark
@@ -289,18 +289,18 @@ These are not faults. Each is a check doing its job, and each says what it saw.
 ## Reading the logs
 
 ```
-journalctl -u backpack-<name> -f       # one tunnel, live
-journalctl -u backpack-monitor -n 100   # the watchdog, the bot, the alerts
-journalctl -u backpack-webui -n 100     # the panel
+journalctl -u ani-tunnel-<name> -f       # one tunnel, live
+journalctl -u ani-tunnel-monitor -n 100   # the watchdog, the bot, the alerts
+journalctl -u ani-tunnel-webui -n 100     # the panel
 ```
 
 The engine logs at `info` by default. For a fault you are actively chasing,
 raise it for that tunnel and watch:
 
 ```
-sudo sed -i 's/^log_level = .*/log_level = "debug"/' /etc/backpack/<name>.toml
-sudo systemctl restart backpack-<name>
-journalctl -u backpack-<name> -f
+sudo sed -i 's/^log_level = .*/log_level = "debug"/' /etc/ani-tunnel/<name>.toml
+sudo systemctl restart ani-tunnel-<name>
+journalctl -u ani-tunnel-<name> -f
 ```
 
 Put it back to `info` afterwards. `trace` on a busy tunnel writes a line per
@@ -316,7 +316,7 @@ Collect this before asking anyone:
 ani-tunnel version
 ani-tunnel tunnel list
 sudo ani-tunnel        # → Diagnose, and copy the output
-journalctl -u backpack-<name> -n 200
+journalctl -u ani-tunnel-<name> -n 200
 ```
 
 The same four from **both** machines. A tunnel has two ends and nearly every
@@ -364,7 +364,7 @@ stall است؛ **هر دو یخ** یعنی تونل بیکار است، که خ�
 ### تونل اصلاً وصل نمی‌شود
 
 **اگر هیچ‌وقت وصل نشده،** مشکل تنظیمات است نه شبکه. اول
-`ani-tunnel check -c /etc/backpack/<name>.toml` (روی همان سروری که تونل رویش اجرا می‌شود؛ جواب خودِ موتور را هم می‌دهد)، بعد به همین ترتیب: توکن یکی باشد
+`ani-tunnel check -c /etc/ani-tunnel/<name>.toml` (روی همان سروری که تونل رویش اجرا می‌شود؛ جواب خودِ موتور را هم می‌دهد)، بعد به همین ترتیب: توکن یکی باشد
 (رایج‌ترین اشتباه، و هیچ پیامی اسمش را نمی‌برد — سرور رد می‌کند و هیچ لاگی نمی‌گوید
 چرا، چون گفتنش به مهاجم می‌گوید نزدیک شده)، پورت یکی باشد، ترنسپورت یکی باشد، و
 فایروال سرور ایران پورت تونل را باز داشته باشد.
@@ -386,7 +386,7 @@ stall است؛ **هر دو یخ** یعنی تونل بیکار است، که خ�
 
 ### پنل باز نمی‌شود
 
-`systemctl status backpack-webui` و `journalctl -u backpack-webui -n 50`. پنل زیر
+`systemctl status ani-tunnel-webui` و `journalctl -u ani-tunnel-webui -n 50`. پنل زیر
 یک **مسیر مخفی** جواب می‌دهد و جای دیگری نه، پس bookmark بدون آن ۴۰۴ می‌گیرد نه
 صفحهٔ ورود. مسیر در `sudo ani-tunnel → Web Panel` نوشته شده.
 
@@ -430,9 +430,9 @@ stall است؛ **هر دو یخ** یعنی تونل بیکار است، که خ�
 ### خواندن لاگ
 
 ```
-journalctl -u backpack-<name> -f
-journalctl -u backpack-monitor -n 100
-journalctl -u backpack-webui -n 100
+journalctl -u ani-tunnel-<name> -f
+journalctl -u ani-tunnel-monitor -n 100
+journalctl -u ani-tunnel-webui -n 100
 ```
 
 پیش‌فرض `info` است. برای خطایی که دنبالش هستی موقتاً `log_level = "debug"` بگذار و
@@ -443,7 +443,7 @@ journalctl -u backpack-webui -n 100
 
 قبل از پرسیدن از کسی این چهارتا را جمع کن — **از هر دو ماشین**:
 `ani-tunnel version`، `ani-tunnel tunnel list`، خروجی `Diagnose`، و
-`journalctl -u backpack-<name> -n 200`. تونل دو سر دارد و تقریباً هر سؤالی دربارهٔ
+`journalctl -u ani-tunnel-<name> -n 200`. تونل دو سر دارد و تقریباً هر سؤالی دربارهٔ
 یک سر را آن یکی جواب می‌دهد.
 
 </div>
@@ -453,4 +453,4 @@ journalctl -u backpack-webui -n 100
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

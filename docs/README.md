@@ -90,4 +90,4 @@ Reference pages: what each part of ani tunnel **is**, and every setting it has.
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

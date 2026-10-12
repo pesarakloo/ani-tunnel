@@ -224,7 +224,7 @@ func configureOffsite() {
 	fmt.Println()
 	tui.Info("Now: " + offsiteLabel())
 	fmt.Println()
-	tui.Warn("{} = The Backup File, e.g.  rclone copy {} remote:backpack/   (Blank = Off)")
+	tui.Warn("{} = The Backup File, e.g.  rclone copy {} remote:ani-tunnel/   (Blank = Off)")
 	fmt.Println()
 	fmt.Println()
 

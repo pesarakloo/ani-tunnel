@@ -13,7 +13,7 @@ import (
 //
 // An update can be started from the SSH menu, from the web panel and from the
 // Telegram bot. The last two run inside units the update itself restarts — the
-// panel in backpack-webui, the bot in backpack-monitor — and `systemctl
+// panel in ani-tunnel-webui, the bot in ani-tunnel-monitor — and `systemctl
 // restart` of the unit that contains the caller stops the caller: systemd sends
 // every process of the unit SIGTERM and waits for it. The update used to
 // restart the panel first, then the monitor, then the tunnels, then check them
@@ -42,7 +42,7 @@ func OwnUnit() string {
 		return ""
 	}
 	for _, line := range strings.Split(string(b), "\n") {
-		// "0::/system.slice/backpack-webui.service" on cgroup v2,
+		// "0::/system.slice/ani-tunnel-webui.service" on cgroup v2,
 		// "1:name=systemd:/system.slice/…" on v1.
 		i := strings.LastIndexByte(line, ':')
 		if i < 0 {

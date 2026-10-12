@@ -167,7 +167,7 @@ func (s *fakeServer) handle(c net.Conn, cfg *ssh.ServerConfig) {
 				}
 
 				if failing {
-					fmt.Fprintln(ch.Stderr(), "sh: backpack: command not found")
+					fmt.Fprintln(ch.Stderr(), "sh: ani-tunnel: command not found")
 					ch.SendRequest("exit-status", false, ssh.Marshal(struct{ S uint32 }{127}))
 					return
 				}
@@ -502,7 +502,7 @@ func TestMain(m *testing.M) { os.Exit(m.Run()) }
 // refused, the server was taken back out, and the operator was shown the far
 // machine's help text for a command that no longer exists, telling them to go
 // and run `ani-tunnel node setup` — the very flow this release removed.
-func TestAnOlderBackpackIsRecognisedAsOneToUpgrade(t *testing.T) {
+func TestAnOlderAniTunnelIsRecognisedAsOneToUpgrade(t *testing.T) {
 	isolateStore(t)
 	srv := newFakeServer(t, "root", "hunter2")
 	srv.old = true

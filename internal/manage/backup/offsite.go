@@ -32,8 +32,8 @@ import (
 // So the setting is a command line with one placeholder. Everything else is
 // theirs.
 //
-//	offsite = "rclone copy {} remote:backpack/"
-//	offsite = "scp {} backup@10.0.0.9:/srv/backpack/"
+//	offsite = "rclone copy {} remote:ani-tunnel/"
+//	offsite = "scp {} backup@10.0.0.9:/srv/ani-tunnel/"
 //	offsite = "restic backup {}"
 //
 // # What it deliberately does not do

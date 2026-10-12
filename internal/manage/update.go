@@ -25,6 +25,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/manage/backup"
 
 	"github.com/BurntSushi/toml"
@@ -70,7 +71,7 @@ func relayHTTPClient(timeout time.Duration) *http.Client {
 			continue
 		}
 		if port := relayExposedPort(cfg.Server.Ports, cfg.Server.Token); port != "" {
-			return socks.HTTPClient("127.0.0.1:"+port, "backpack", cfg.Server.Token, timeout)
+			return socks.HTTPClient("127.0.0.1:"+port, compat.RelayUsername, cfg.Server.Token, timeout)
 		}
 	}
 	return nil
@@ -265,7 +266,7 @@ func newerVersion(remote, local string) bool {
 }
 
 // CheckUpdate reports whether a newer release is published on GitHub. It works
-// the same regardless of how backpack was installed (release or git clone) —
+// the same regardless of how ani-tunnel was installed (release or git clone) —
 // the update itself always comes from the release assets.
 func CheckUpdate() (bool, string, error) {
 	tag, err := latestTag()
@@ -428,7 +429,7 @@ func verifyChecksum(path, want string) error {
 	return nil
 }
 
-// extractBinary pulls the `backpack` executable out of the release archive and
+// extractBinary pulls the `ani-tunnel` executable out of the release archive and
 // atomically replaces the installed binary.
 func extractBinary(archive string) error {
 	// Written next to the target so the final rename is atomic: the file being
@@ -441,7 +442,7 @@ func extractBinary(archive string) error {
 	return os.Rename(tmp, app.BinPath)
 }
 
-// extractBinaryTo pulls the `backpack` binary out of a release archive and
+// extractBinaryTo pulls the `ani-tunnel` binary out of a release archive and
 // writes it to dest.
 //
 // Split out from extractBinary so the same reader serves the install and the
@@ -470,7 +471,7 @@ func extractBinaryTo(archive, dest string) error {
 		if err != nil {
 			return err
 		}
-		if hdr.Typeflag != tar.TypeReg || filepath.Base(hdr.Name) != "backpack" {
+		if hdr.Typeflag != tar.TypeReg || (filepath.Base(hdr.Name) != "ani-tunnel" && filepath.Base(hdr.Name) != compat.LegacyBinary) {
 			continue
 		}
 		out, err := os.OpenFile(dest, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0755)
@@ -483,7 +484,7 @@ func extractBinaryTo(archive, dest string) error {
 		}
 		return out.Close()
 	}
-	return fmt.Errorf("no `backpack` binary found inside the archive")
+	return fmt.Errorf("no `ani-tunnel` binary found inside the archive")
 }
 
 // ApplyUpdate downloads the latest release and installs it safely:
@@ -572,7 +573,7 @@ func ApplyUpdate(logf func(string)) error {
 
 	// Re-apply the kernel tuning, but only where it was applied before.
 	//
-	// Nothing else rewrites /etc/sysctl.d/99-backpack.conf, so a value this
+	// Nothing else rewrites /etc/sysctl.d/99-ani-tunnel.conf, so a value this
 	// program wrote and later regretted would otherwise outlive every update —
 	// which is exactly what happened with ip_local_port_range: servers tuned
 	// before the fix kept "1024 65535", and with it the chance of losing a

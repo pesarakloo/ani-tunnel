@@ -32,7 +32,7 @@ const at = path => BASE + path;
    person; rewording them must not quietly take the button away. */
 async function refusal(r) {
   const e = new Error(await r.text() || r.statusText);
-  e.fix = r.headers.get('X-Backpack-Fix') || '';
+  e.fix = r.headers.get('X-Ani-Tunnel-Fix') || '';
   e.status = r.status;
   return e;
 }

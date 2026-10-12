@@ -1,5 +1,5 @@
 // Package tui provides small terminal helpers (colors, prompts, banners)
-// used by the interactive backpack menu. No third-party dependencies.
+// used by the interactive ani-tunnel menu. No third-party dependencies.
 //
 // The theme uses three colors only: red (accents, numbers, errors), white
 // (titles, values) and gray (descriptions, separators).
@@ -124,7 +124,7 @@ func Rule() {
 	fmt.Println(Gray + "═══════════════════════════════════════════════════════" + Reset)
 }
 
-// Logo prints the backpack banner and version.
+// Logo prints the ani-tunnel banner and version.
 func Logo(version string) {
 	fmt.Printf("\n%s  ani tunnel  %s%s\n", Bold+Cyan, version, Reset)
 	fmt.Println(Gray + "  Secure connections. Simple control." + Reset)

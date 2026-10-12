@@ -16,13 +16,13 @@ func TestWasAppliedFollowsTheFileOptimizeOwns(t *testing.T) {
 	t.Cleanup(func() { sysctlFile, legacySysctlFile = old, oldLegacy })
 	legacySysctlFile = filepath.Join(t.TempDir(), "legacy.conf")
 
-	sysctlFile = filepath.Join(dir, "99-backpack.conf")
+	sysctlFile = filepath.Join(dir, "99-ani-tunnel.conf")
 	if WasApplied() {
 		t.Error("reported as applied with no file present — an update would retune a " +
 			"machine whose operator never ran Optimize")
 	}
 
-	if err := os.WriteFile(sysctlFile, []byte("# managed by backpack\n"), 0o644); err != nil {
+	if err := os.WriteFile(sysctlFile, []byte("# managed by ani-tunnel\n"), 0o644); err != nil {
 		t.Fatalf("writing the stand-in sysctl file: %v", err)
 	}
 	if !WasApplied() {

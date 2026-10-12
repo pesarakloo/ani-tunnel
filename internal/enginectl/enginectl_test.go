@@ -158,7 +158,7 @@ func TestTheSocketIsNotReadableByAnybodyElse(t *testing.T) {
 	if err != nil {
 		t.Fatalf("stat dir: %v", err)
 	}
-	// The directory is the test's TempDir here rather than /run/backpack, so
+	// The directory is the test's TempDir here rather than /run/ani-tunnel, so
 	// what is checked is that it is not world-anything — the mode Serve asks
 	// for when it makes the directory itself is 0700.
 	if dir.Mode().Perm()&0o007 != 0 {

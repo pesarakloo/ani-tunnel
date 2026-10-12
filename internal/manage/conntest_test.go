@@ -61,7 +61,7 @@ func TestATestLinkIsShortAndIsNotTakenForASetupLink(t *testing.T) {
 	if _, err := parseConnTestLink(setup); err == nil {
 		t.Error("a setup link parsed as a test link")
 	}
-	if IsConnTestLink("backpack://t.AAAA") {
+	if IsConnTestLink("ani-tunnel://t.AAAA") {
 		t.Error("a cut-short test link was accepted")
 	}
 }
@@ -179,7 +179,7 @@ func TestAConnectionTestOverLoopbackPassesEveryReverseTransport(t *testing.T) {
 		}
 	}
 	defer func() { connTestReverse = previousReverse }()
-	bin := filepath.Join(t.TempDir(), "backpack")
+	bin := filepath.Join(t.TempDir(), "ani-tunnel")
 	build := exec.Command("go", "build", "-o", bin, "../..")
 	build.Stderr = os.Stderr
 	if err := build.Run(); err != nil {

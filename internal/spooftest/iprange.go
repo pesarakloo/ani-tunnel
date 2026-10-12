@@ -4,7 +4,7 @@
 // an IP and hope" into something provable.
 //
 // The IP-expansion logic here is adapted from ChromeSpoof (MIT, © 2026
-// AminMGMT), which backpack's author also wrote.
+// AminMGMT), which the upstream author also wrote.
 package spooftest
 
 import (

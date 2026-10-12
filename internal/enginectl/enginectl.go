@@ -19,7 +19,7 @@
 // # Why a unix socket and not a port
 //
 // It is reachable only by something already on the machine and running as root.
-// The socket is 0600 under /run/backpack, which is 0700, so the attack surface
+// The socket is 0600 under /run/ani-tunnel, which is 0700, so the attack surface
 // added is exactly the attack surface of already being root — which is to say
 // none. A TCP port, however tightly bound, is one firewall mistake away from
 // being reachable, and this is a channel that restarts tunnels.
@@ -34,7 +34,7 @@
 //
 // # Why the unit does not declare a RuntimeDirectory
 //
-// `RuntimeDirectory=backpack` is the systemd idiom and would have systemd make
+// `RuntimeDirectory=ani-tunnel` is the systemd idiom and would have systemd make
 // the directory with the right mode and remove it on stop. It is not used, and
 // the reason is not style: the tunnel units are compared against one template
 // and rewritten when they differ, so adding a line to that template restarts
@@ -60,6 +60,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 const (
@@ -77,7 +79,7 @@ const (
 )
 
 // Dir is where the sockets live. One per tunnel, named after it.
-var Dir = "/run/backpack"
+var Dir = compat.ExistingPath("/run/ani-tunnel", compat.LegacyRuntimeDir)
 
 // SocketPath is the socket for one tunnel.
 func SocketPath(name string) string { return filepath.Join(Dir, name+".sock") }

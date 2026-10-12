@@ -53,7 +53,7 @@ Choosing self-signed asks for an optional domain or IP to embed in the cert.
 - this server able to reach `acme-v02.api.letsencrypt.org`.
 
 The certificate is requested on the first connection, which takes a few seconds.
-If it does not appear: `journalctl -u backpack-<name> -n 50`.
+If it does not appear: `journalctl -u ani-tunnel-<name> -n 50`.
 
 Change any of this later with **Manage → Edit → Certificate**.
 

@@ -20,6 +20,7 @@ import (
 
 	"github.com/pesarakloo/ani-tunnel/config"
 	"github.com/pesarakloo/ani-tunnel/internal/app"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 // Handing a tunnel's settings to the other server.
@@ -53,7 +54,7 @@ import (
 // shareScheme and shareVersion make the string recognisable and let a later
 // format be told apart before anything is decoded.
 const (
-	shareScheme  = "backpack://"
+	shareScheme  = "ani-tunnel://"
 	shareVersion = "1"
 )
 
@@ -204,7 +205,7 @@ func DecodeShareLink(s string) (out ShareLink, err error) {
 			out = ShareLink{}
 		}
 	}()
-	s = strings.TrimSpace(s)
+	s = compat.NormalizeLink(strings.TrimSpace(s))
 	if s == "" {
 		return out, fmt.Errorf("paste the setup link from the other server")
 	}
@@ -790,7 +791,7 @@ func nonEmpty(in []string) []string {
 	seen := map[string]bool{}
 	var out []string
 	for _, s := range in {
-		s = strings.TrimSpace(s)
+		s = compat.NormalizeLink(strings.TrimSpace(s))
 		if s == "" || seen[s] {
 			continue
 		}

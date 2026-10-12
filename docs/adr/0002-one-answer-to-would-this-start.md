@@ -5,7 +5,7 @@
 ## Context
 
 Two pieces of code judged a tunnel configuration. The engine's load-time
-validation (`cmd/defaults.go validateConfig`) decides whether `backpack -c`
+validation (`cmd/defaults.go validateConfig`) decides whether `ani-tunnel -c`
 starts, and a reload uses it to decide whether to keep the running tunnel.
 `ani-tunnel check` (`manage/spec.ValidateConfigFile`) answered the operator's
 question before a restart, with its own, smaller set of rules. The two could

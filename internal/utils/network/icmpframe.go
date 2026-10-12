@@ -5,6 +5,8 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 	"sync"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 // The framing that carries the tunnel inside ICMP echo, and keeps two tunnels
@@ -68,7 +70,7 @@ const (
 // deterministic, so the two ends agree without exchanging anything, and two
 // tunnels on one host practically never collide.
 func xdiTag(token string) (tag [xdiTagLen]byte) {
-	sum := sha256.Sum256([]byte("backpack-xdi-v1:" + token))
+	sum := sha256.Sum256([]byte(compat.ICMPLabel + token))
 	copy(tag[:], sum[:xdiTagLen])
 	return tag
 }

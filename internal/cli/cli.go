@@ -316,7 +316,7 @@ func tunnelStatus(name string, asJSON bool) Result {
 		}
 		r = ok(b.String())
 	}
-	// The exit code carries the answer as well as the output, so `backpack
+	// The exit code carries the answer as well as the output, so `ani-tunnel
 	// tunnel status x >/dev/null || alert` is a whole monitoring integration.
 	if v.State != "online" {
 		r.Code = CodeUnhealthy
@@ -325,7 +325,7 @@ func tunnelStatus(name string, asJSON bool) Result {
 }
 
 // EngineCheck is the engine's own load-time validation of a config file —
-// the checks that decide whether `backpack -c` starts, machine-dependent ones
+// the checks that decide whether `ani-tunnel -c` starts, machine-dependent ones
 // included. It lives in package cmd, which this package cannot import, so
 // main installs it; nil leaves check to its static checks alone.
 var EngineCheck func(path string) error
@@ -362,7 +362,7 @@ func runCheck(args []string) Result {
 		return fail(CodeUsage, "check takes one config file\n")
 	}
 	if path == "" {
-		return fail(CodeUsage, "check needs a config file: ani-tunnel check -c /etc/backpack/x.toml\n")
+		return fail(CodeUsage, "check needs a config file: ani-tunnel check -c /etc/ani-tunnel/x.toml\n")
 	}
 
 	problems := manage.ValidateConfigFile(path)
@@ -522,7 +522,7 @@ func runLink(args []string) Result {
 		}
 	}
 	if strings.TrimSpace(link) == "" {
-		return fail(CodeUsage, "link apply needs the setup link: ani-tunnel link apply 'backpack://…'\n")
+		return fail(CodeUsage, "link apply needs the setup link: ani-tunnel link apply 'ani-tunnel://…'\n")
 	}
 	if manage.IsConnTestLink(link) {
 		// A Connection Test link from the Iran server: nothing is installed,

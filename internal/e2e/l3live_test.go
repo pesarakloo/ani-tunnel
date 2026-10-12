@@ -28,7 +28,7 @@ import (
 // On Ubuntu that needs kernel.apparmor_restrict_unprivileged_userns=0 (it
 // resets on reboot); without it the namespace is made but has no capabilities,
 // and every carrier fails to open. The script it drives is testdata/l3live.sh.
-// With BACKPACK_PREV_BINARY set, udp, quic and pck also run across versions.
+// With ANI_TUNNEL_PREV_BINARY set, udp, quic and pck also run across versions.
 func TestL3CarriersOverARealTUN(t *testing.T) {
 	if os.Getenv("BP_L3_LIVE") == "" {
 		t.Skip("set BP_L3_LIVE=1 on a host that allows unprivileged user namespaces to run this")

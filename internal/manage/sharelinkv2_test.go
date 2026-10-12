@@ -34,7 +34,7 @@ func TestFormat2IsShortAndCarriesTheSameLink(t *testing.T) {
 		Ports: []string{"3030", "8080"}, Token: randomToken(64)}
 	ApplyPreset(&iran, PresetTurbo)
 	raw := pendingReverseLink(iran, "94.139.180.179", linkExtras{})
-	if !strings.HasPrefix(raw, "backpack://2.") || len(raw) > 140 {
+	if !strings.HasPrefix(raw, "ani-tunnel://2.") || len(raw) > 140 {
 		t.Errorf("the link is %d characters: %s", len(raw), raw)
 	}
 	got, err := DecodeShareLink(raw)
@@ -90,10 +90,10 @@ func TestAFormat1LinkStillDecodes(t *testing.T) {
 // A changed character is refused, not read as another link.
 func TestAFormat2LinkWithAChangedCharacterIsRefused(t *testing.T) {
 	s, _ := sampleLink().Encode()
-	body := []byte(strings.TrimPrefix(s, "backpack://2."))
+	body := []byte(strings.TrimPrefix(s, "ani-tunnel://2."))
 	raw, _ := base64.RawURLEncoding.DecodeString(string(body))
 	raw[len(raw)/2] ^= 0x01
-	if _, err := DecodeShareLink("backpack://2." + base64.RawURLEncoding.EncodeToString(raw)); err == nil {
+	if _, err := DecodeShareLink("ani-tunnel://2." + base64.RawURLEncoding.EncodeToString(raw)); err == nil {
 		t.Error("a link with a flipped bit was accepted")
 	}
 }

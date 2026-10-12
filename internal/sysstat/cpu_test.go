@@ -9,7 +9,7 @@ import (
 //
 // Get uses cpu.Percent with a zero interval, which reports the delta since the
 // last call in the same process. That is right for the panel and the monitor,
-// which are long-lived and call it on a timer. It is meaningless in `backpack
+// which are long-lived and call it on a timer. It is meaningless in `ani-tunnel
 // node exec` — a process that starts, answers one question and exits — because
 // there is no previous call: the only delta available is the one since the
 // package initialised microseconds earlier. Over a window that short /proc/stat

@@ -102,7 +102,7 @@ pin, but not touch a login (see [access control](access-control.md)).
 
 ### Where the password is kept
 
-In `/etc/backpack/nodes.json`, on the panel's own server, `0600` and owned by
+In `/etc/ani-tunnel/nodes.json`, on the panel's own server, `0600` and owned by
 root — the same file and the same permissions as every other secret ani tunnel
 holds. It is never sent to the browser.
 
@@ -263,7 +263,7 @@ as before, until it is upgraded.
 می‌گویی. اگر عوض شود پنل وصل نمی‌شود و می‌گوید؛ یا سرور از نو ساخته شده یا چیز
 دیگری جایش جواب می‌دهد. عوض‌کردن آدرس سرور کلید را هم پاک می‌کند.
 
-**رمز کجاست:** در `/etc/backpack/nodes.json` روی سرور خود پنل، با مجوز `0600` و
+**رمز کجاست:** در `/etc/ani-tunnel/nodes.json` روی سرور خود پنل، با مجوز `0600` و
 مالکیت root — همان فایل و همان مجوزی که هر راز دیگر ani tunnel دارد. هیچ‌وقت به
 مرورگر فرستاده نمی‌شود.
 
@@ -294,4 +294,4 @@ as before, until it is upgraded.
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

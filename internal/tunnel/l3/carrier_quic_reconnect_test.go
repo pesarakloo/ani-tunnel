@@ -13,7 +13,7 @@ import (
 )
 
 func TestL3UDPDNSStopsWithItsGeneration(t *testing.T) {
-	if mode := os.Getenv("BACKPACK_L3_UDP_DNS_AUDIT"); mode != "" {
+	if mode := os.Getenv("ANI_TUNNEL_L3_UDP_DNS_AUDIT"); mode != "" {
 		parts := strings.Split(mode, ":")
 		started, release := make(chan struct{}, 2), make(chan struct{})
 		defer close(release)
@@ -104,7 +104,7 @@ func TestL3UDPDNSStopsWithItsGeneration(t *testing.T) {
 				ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 				defer cancel()
 				cmd := exec.CommandContext(ctx, executable, "-test.run=^TestL3UDPDNSStopsWithItsGeneration$", "-test.timeout=6s")
-				cmd.Env = append(os.Environ(), "BACKPACK_L3_UDP_DNS_AUDIT="+stage+":"+kind)
+				cmd.Env = append(os.Environ(), "ANI_TUNNEL_L3_UDP_DNS_AUDIT="+stage+":"+kind)
 				if out, err := cmd.CombinedOutput(); err != nil {
 					t.Fatalf("isolated %s %s: %v\n%s", stage, kind, err, out)
 				}
@@ -396,7 +396,7 @@ func TestQuicInitialDialStopsWithItsParent(t *testing.T) {
 }
 
 func TestQuicDNSLookupStopsWithContext(t *testing.T) {
-	if kind := os.Getenv("BACKPACK_QUIC_DNS_CHILD"); kind != "" {
+	if kind := os.Getenv("ANI_TUNNEL_QUIC_DNS_CHILD"); kind != "" {
 		started := make(chan struct{}, 1)
 		net.DefaultResolver = &net.Resolver{PreferGo: true, Dial: func(ctx context.Context, _, _ string) (net.Conn, error) {
 			select {
@@ -449,7 +449,7 @@ func TestQuicDNSLookupStopsWithContext(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			defer cancel()
 			cmd := exec.CommandContext(ctx, os.Args[0], "-test.run=^TestQuicDNSLookupStopsWithContext$", "-test.v")
-			cmd.Env = append(os.Environ(), "BACKPACK_QUIC_DNS_CHILD="+kind)
+			cmd.Env = append(os.Environ(), "ANI_TUNNEL_QUIC_DNS_CHILD="+kind)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
 				t.Fatalf("isolated DNS %s: %v\n%s", kind, err, out)

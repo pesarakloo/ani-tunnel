@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"github.com/pesarakloo/ani-tunnel/internal/app"
 	"net"
 	"os"
 	"os/exec"
@@ -32,7 +33,7 @@ type realityCoverResult struct {
 }
 
 func probeRealitySetup(ctx context.Context, target, sni, binary string) error {
-	log, err := os.CreateTemp("", "backpack-reality-check-*.log")
+	log, err := os.CreateTemp("", "ani-tunnel-reality-check-*.log")
 	if err != nil {
 		return err
 	}
@@ -110,7 +111,7 @@ func realityBinary(current string) string {
 	if current != "" {
 		return current
 	}
-	for _, candidate := range []string{managedHelperPath("xray"), "/usr/local/lib/backpack/xray", "/usr/local/bin/xray"} {
+	for _, candidate := range []string{managedHelperPath("xray"), app.HelperDir + "/xray", "/usr/local/bin/xray"} {
 		if info, err := os.Stat(candidate); err == nil && !info.IsDir() && info.Mode()&0111 != 0 {
 			return candidate
 		}

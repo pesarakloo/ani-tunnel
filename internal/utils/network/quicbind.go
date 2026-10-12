@@ -6,6 +6,7 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/quic-go/quic-go"
 )
 
@@ -31,7 +32,7 @@ import (
 
 // QUICBindingLabel is the TLS exporter label. Versioned, so a change to what is
 // hashed is a change to the label and never a silent mismatch.
-const QUICBindingLabel = "EXPORTER-backpack-quic-binding-v1"
+const QUICBindingLabel = compat.QUICBindingLabel
 
 const quicBindingLength = 32
 

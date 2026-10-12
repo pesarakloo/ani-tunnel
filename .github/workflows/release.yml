@@ -78,7 +78,7 @@ jobs:
           node-version: "22"
 
       - name: Prepare configuration test fixtures
-        run: sudo install -d -m 700 -o "$(id -un)" -g "$(id -gn)" /etc/backpack
+        run: sudo install -d -m 700 -o "$(id -un)" -g "$(id -gn)" /etc/ani-tunnel
 
       - name: Test before publishing
         # Nothing gets published that has not passed the suite. A broken

@@ -72,7 +72,7 @@ server pastes.
 | **Tunnel Port** | what the client dials. Refused if already in use for that protocol. `85.10.11.51:443` pins it to one address — see [Port mappings](port-mappings.md#binding-to-one-local-address) |
 | **Listen On IPv6 As Well** `[y/N]` | only for a bare port; binds `::`, which accepts IPv4 too on a dual-stack host |
 | **Forwarded Ports** | `443`, `443=127.0.0.1:2096`, `443=a:1\|b:2`, `10000-10009`, `85.11.12.13:443=127.0.0.1:2096`, comma separated. [Every form](port-mappings.md) |
-| **Tunnel Name** | names the service (`backpack-<name>`) and the config file |
+| **Tunnel Name** | names the service (`ani-tunnel-<name>`) and the config file |
 | **Security Token** | generated here — press Enter. The setup link carries it |
 | **Carry UDP As Well As TCP On Those Ports** `[y/N]` | off by default. [Forwarded UDP](forwarded-udp.md) |
 | **TLS Certificate** | wss/wssmux only — Self-Signed, Let's Encrypt, or Existing Files |
@@ -88,7 +88,7 @@ dials, the forwarded ports and where each lands on kharej, the certificate,
 tuning, config file — with two ways to build the kharej under it, and **Create
 This Tunnel**:
 
-- **Setup Link** — the `backpack://…` line, for a kharej that already runs
+- **Setup Link** — the `ani-tunnel://…` line, for a kharej that already runs
   ani tunnel: paste it under Setup Kharej → Setup Link (or run
   `ani-tunnel link apply '<link>'` there).
 - **Install ani tunnel And Set Up This Tunnel** — one command, run as root on a
@@ -125,7 +125,7 @@ server pastes. The Iran questions, in order:
 | **Restart This Tunnel On Both Servers Every N Hours (0 = Off)** | as for reverse above |
 
 Then one short summary — interface, where it dials, forwarded ports, tuning,
-config file — with the **Setup Link** (`backpack://…`) and the one-line
+config file — with the **Setup Link** (`ani-tunnel://…`) and the one-line
 **Install ani tunnel And Set Up This Tunnel** under it, as for reverse, and
 **Create This Tunnel**. The link is shown again under **Manage tunnels → the
 tunnel → Setup Link**.
@@ -252,7 +252,7 @@ behind the kharej is a common reason to run it.
 
 A backup bundles **every tunnel, the web-panel password, Telegram settings, TLS
 certificates and the auto-refresh schedule** into one portable `.tar.gz` under
-`/root/BackPack/backups`.
+`/root/ani-tunnel/backups`.
 
 | Option | Notes |
 |---|---|
@@ -474,4 +474,4 @@ FEC؛ و zero-copy (فقط روی tcp ساده).
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

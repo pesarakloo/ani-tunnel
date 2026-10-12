@@ -1,7 +1,7 @@
 /* One journal line, taken apart.
  *
  * The server reads the journal as short-iso — "2026-09-29T17:59:21+03:30 host
- * backpack[12]: …" — and the pattern the Logs dialog used was written for the
+ * ani-tunnel[12]: …" — and the pattern the Logs dialog used was written for the
  * classic "Sep 29 17:59:21" form, so it matched nothing: every row carried the
  * date, the host name and the process in front of the message, and no clock.
  * Inside that is the engine's own line, "29-Sep 17:59:21 [INFO] …", whose tag

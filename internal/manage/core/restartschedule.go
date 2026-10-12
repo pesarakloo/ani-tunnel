@@ -20,11 +20,11 @@ import (
 // link carries them to the kharej.
 
 // scheduledRestartUnit is the name of the timer, and of the one-shot service it
-// starts, for a tunnel. Not "backpack-<name>…": that is the tunnel's own unit
+// starts, for a tunnel. Not "ani-tunnel-<name>…": that is the tunnel's own unit
 // pattern, and a second unit matching it would be read as a second tunnel by
 // anything that looks at unit names.
 func scheduledRestartUnit(name, kind string) string {
-	return "backpack-restart-" + name + "." + kind
+	return app.ServicePrefix + "restart-" + name + "." + kind
 }
 
 // restartCalendar is the OnCalendar expression for every hours hours at minute

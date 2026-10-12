@@ -51,7 +51,7 @@ func healthLevel(l manage.CheckLevel) string {
 
 // handleAlerts returns what the monitor's alert watcher has recorded: the
 // conditions active right now and the recent messages. The panel only reads;
-// the watcher in backpack-monitor writes.
+// the watcher in ani-tunnel-monitor writes.
 func (s *server) handleAlerts(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, alerthist.Load())
 }
@@ -329,6 +329,6 @@ func findTunnel(name string) (manage.Tunnel, bool) {
 // put that remedy in front of the operator instead of a sentence describing it.
 // The sentence stays — it is what somebody reading a log or a curl sees.
 const (
-	fixHeader     = "X-Backpack-Fix"
+	fixHeader     = "X-Ani-Tunnel-Fix"
 	fixLinkTunnel = "link-tunnel"
 )

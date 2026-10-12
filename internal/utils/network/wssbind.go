@@ -10,6 +10,8 @@ import (
 	"sync"
 
 	utls "github.com/refraction-networking/utls"
+
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 )
 
 var errNoTLSState = errors.New("no TLS connection state")
@@ -37,7 +39,7 @@ var errNoTLSState = errors.New("no TLS connection state")
 // Let's Encrypt, because it depends on the session, not the certificate.
 
 // WSSBindingLabel is the RFC 5705 exporter label for the credential binding.
-const WSSBindingLabel = "EXPORTER-backpack-wss-binding-v1"
+const WSSBindingLabel = compat.WSSBindingLabel
 
 // wssBindingLength is how many bytes of keying material to export.
 const wssBindingLength = 32

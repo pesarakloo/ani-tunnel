@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"sort"
 	"time"
 
 	"github.com/pesarakloo/ani-tunnel/internal/alerthist"
@@ -49,12 +48,11 @@ func SetAutoBackup(on bool) error {
 // there is none. Names are timestamped so lexical order is chronological, but
 // the file's own mtime is what actually answers "how old".
 func newestBackupTime() time.Time {
-	matches, _ := filepath.Glob(filepath.Join(app.BackupDir, "backpack-backup-*.tar.gz"))
+	matches := backupArchives(app.BackupDir)
 	if len(matches) == 0 {
 		return time.Time{}
 	}
-	sort.Strings(matches)
-	fi, err := os.Stat(matches[len(matches)-1])
+	fi, err := os.Stat(matches[0])
 	if err != nil {
 		return time.Time{}
 	}

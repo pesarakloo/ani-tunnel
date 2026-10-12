@@ -1,5 +1,5 @@
-BIN      := backpack
-BIN_PATH := /usr/local/bin/backpack
+BIN      := ani-tunnel
+BIN_PATH := /usr/local/bin/ani-tunnel
 LDFLAGS  := -s -w
 
 .PHONY: all build install uninstall clean tidy run vendor release-linux release version sbom reproducible check
@@ -38,11 +38,16 @@ release-linux:
 	@for a in $(ARCHES); do 	  echo "  building linux/$$a"; 	  CGO_ENABLED=0 GOOS=linux GOARCH=$$a 	    go build -trimpath -ldflags "$(LDFLAGS)" -o dist/ani-tunnel-linux-$$a . || exit 1; 	done
 	@for v in $(ARMS); do 	  echo "  building linux/armv$$v"; 	  CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=$$v 	    go build -trimpath -ldflags "$(LDFLAGS) -X github.com/pesarakloo/ani-tunnel/internal/app.GOARM=$$v" 	    -o dist/ani-tunnel-linux-armv$$v . || exit 1; 	done
 
-# GitHub release assets: ani-tunnel_linux_<arch>.tar.gz, each containing a single
-# `backpack` binary. These are what install.sh and the in-app updater download.
+# Archives contain the ani-tunnel executable plus a compatibility copy for
+# previously installed updaters. Both are regular files with identical bytes.
 release: version release-linux
 	mkdir -p release
-	@for a in $(ARCHES) $(addprefix armv,$(ARMS)); do 	  cp dist/ani-tunnel-linux-$$a dist/backpack && 	  tar -czf release/ani-tunnel_linux_$$a.tar.gz -C dist backpack && 	  rm dist/backpack || exit 1; 	done
+	@for a in $(ARCHES) $(addprefix armv,$(ARMS)); do \
+	  cp dist/ani-tunnel-linux-$$a dist/ani-tunnel && \
+	  cp dist/ani-tunnel dist/backpack && \
+	  tar -czf release/ani-tunnel_linux_$$a.tar.gz -C dist ani-tunnel backpack && \
+	  rm dist/ani-tunnel dist/backpack || exit 1; \
+	done
 	@# A checksum file published beside the assets is what lets the installer and
 	@# the updater prove that a mirror handed them the real binary. Users on
 	@# restricted networks fetch these through third-party proxies, so this is
@@ -75,7 +80,7 @@ release: version release-linux
 # the artefact somebody will actually run.
 sbom:
 	@mkdir -p release
-	@{ 	  echo "# ani tunnel $$(cat VERSION) — bill of materials"; 	  echo "#"; 	  echo "# Read out of the built binary, so it describes what was linked"; 	  echo "# rather than what go.mod asked for."; 	  echo "#"; 	  echo "# Verify a binary you downloaded against this with:"; 	  echo "#     go version -m ./backpack"; 	  echo; 	  go version -m dist/ani-tunnel-linux-amd64; 	} > release/SBOM.txt
+	@{ 	  echo "# ani tunnel $$(cat VERSION) — bill of materials"; 	  echo "#"; 	  echo "# Read out of the built binary, so it describes what was linked"; 	  echo "# rather than what go.mod asked for."; 	  echo "#"; 	  echo "# Verify a binary you downloaded against this with:"; 	  echo "#     go version -m ./ani-tunnel"; 	  echo; 	  go version -m dist/ani-tunnel-linux-amd64; 	} > release/SBOM.txt
 	@echo "SBOM -> release/SBOM.txt"
 
 # reproducible checks that two builds of the same source are byte-identical.
@@ -86,10 +91,10 @@ sbom:
 # the whole point of a reproducible build, since the property is only useful if
 # a third party can confirm it.
 reproducible:
-	@CGO_ENABLED=0 go build -trimpath -ldflags "$(LDFLAGS)" -o /tmp/backpack-repro-a .
-	@CGO_ENABLED=0 go build -trimpath -ldflags "$(LDFLAGS)" -o /tmp/backpack-repro-b .
-	@if cmp -s /tmp/backpack-repro-a /tmp/backpack-repro-b; then 	  echo "reproducible: two builds are byte-identical"; 	else 	  echo "NOT reproducible: two builds of the same source differ"; exit 1; 	fi
-	@rm -f /tmp/backpack-repro-a /tmp/backpack-repro-b
+	@CGO_ENABLED=0 go build -trimpath -ldflags "$(LDFLAGS)" -o /tmp/ani-tunnel-repro-a .
+	@CGO_ENABLED=0 go build -trimpath -ldflags "$(LDFLAGS)" -o /tmp/ani-tunnel-repro-b .
+	@if cmp -s /tmp/ani-tunnel-repro-a /tmp/ani-tunnel-repro-b; then 	  echo "reproducible: two builds are byte-identical"; 	else 	  echo "NOT reproducible: two builds of the same source differ"; exit 1; 	fi
+	@rm -f /tmp/ani-tunnel-repro-a /tmp/ani-tunnel-repro-b
 
 # release-key generates the signing pair, once. It prints both halves and keeps
 # neither: the public half is pasted into app.ReleasePublicKey, the private half
@@ -97,15 +102,11 @@ reproducible:
 release-key:
 	@go run ./tools/releasekey
 
-install: build
-	install -m 0755 $(BIN) $(BIN_PATH)
-	ln -sfn $(BIN_PATH) $(dir $(BIN_PATH))ani-tunnel
-	mkdir -p /etc/backpack
-	@echo "Installed. Run: ani-tunnel"
+install:
+	BP_BUILD_FROM_SOURCE=1 bash ./install.sh
 
 uninstall:
 	rm -f $(BIN_PATH)
-	@if [ "$$(readlink $(dir $(BIN_PATH))ani-tunnel)" = "$(BIN_PATH)" ]; then rm -f $(dir $(BIN_PATH))ani-tunnel; fi
 
 run: build
 	sudo ./$(BIN)

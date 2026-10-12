@@ -9,9 +9,9 @@ import (
 
 // The one-line install the Iran server prints for a kharej without ani tunnel:
 //
-//	bash <(curl -fsSL …/install.sh) link apply 'backpack://…'
+//	bash <(curl -fsSL …/install.sh) link apply 'ani-tunnel://…'
 //
-// install.sh has to take exactly that — with or without a leading "backpack" —
+// install.sh has to take exactly that — with or without a leading "ani-tunnel" —
 // hand it to the installed binary instead of opening the menu, and go on
 // refusing anything else. The argument block is run here as the script runs it.
 func TestTheInstallerTakesASetupLinkAndNothingElse(t *testing.T) {
@@ -39,10 +39,10 @@ func TestTheInstallerTakesASetupLinkAndNothingElse(t *testing.T) {
 		return strings.TrimSpace(string(out)), code
 	}
 
-	const link = "backpack://H4sIAAAAAAAC_abc"
+	const link = "ani-tunnel://H4sIAAAAAAAC_abc"
 	for _, args := range [][]string{
 		{"link", "apply", link},
-		{"backpack", "link", "apply", link},
+		{"ani-tunnel", "link", "apply", link},
 		{"ani-tunnel", "link", "apply", link},
 	} {
 		out, code := run(args...)

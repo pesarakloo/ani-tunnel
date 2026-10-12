@@ -6,6 +6,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/socks"
 )
 
@@ -89,5 +90,5 @@ func RelayClientVia(name string, timeout time.Duration) (*http.Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("could not prepare %s to relay: %w", name, err)
 	}
-	return socks.HTTPClient(fmt.Sprintf("127.0.0.1:%d", port), "backpack", spec.Token, timeout), nil
+	return socks.HTTPClient(fmt.Sprintf("127.0.0.1:%d", port), compat.RelayUsername, spec.Token, timeout), nil
 }

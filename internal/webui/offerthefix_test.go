@@ -35,7 +35,7 @@ func TestARefusalWithARemedyCarriesIt(t *testing.T) {
 	if err != nil {
 		t.Fatalf("api.js: %v", err)
 	}
-	if !strings.Contains(string(api), "X-Backpack-Fix") {
+	if !strings.Contains(string(api), "X-Ani-Tunnel-Fix") {
 		t.Error("the panel throws away the remedy the server named")
 	}
 

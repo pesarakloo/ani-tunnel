@@ -56,7 +56,7 @@ func farSideBinary(t *testing.T) string {
 	if testing.Short() {
 		t.Skip("builds the whole binary; skipped under -short")
 	}
-	out := filepath.Join(t.TempDir(), "backpack")
+	out := filepath.Join(t.TempDir(), "ani-tunnel")
 	cmd := exec.Command("go", "build", "-o", out, "../..")
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {

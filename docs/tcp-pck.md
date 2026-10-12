@@ -91,11 +91,11 @@ raw PREROUTING -p tcp --dport <port> -j NOTRACK
 raw OUTPUT     -p tcp --sport <port> -j NOTRACK
 ```
 
-They are tagged `backpack-pck-<port>`, so one left behind by a crash is easy to
+They are tagged a tunnel-specific ownership tag, so one left behind by a crash is easy to
 find:
 
 ```bash
-iptables-save | grep backpack-pck
+iptables-save | grep -E -- '-pck-[a-f0-9:-]+'
 ```
 
 **Without `iptables` installed the tunnel runs and is unreliable** — it works,
@@ -144,7 +144,7 @@ throttle می‌شود و علتش چیزی است که روی *اتصال* عم
 
 **قوانین فایروال:** چون کرنل روی پورت تونل گوش نمی‌دهد، به هر سگمنت با RST جواب
 می‌دهد و آن RST برای هر دستگاه stateful وسط راه یعنی «اتصال تمام شد». آنی تانل موقع
-استارت دو قانون باریک با تگ `backpack-pck-<port>` اضافه و موقع استاپ حذف می‌کند.
+استارت دو قانون باریک با تگ اختصاصی همان تونل اضافه و موقع استاپ حذف می‌کند.
 **بدون نصب بودن iptables تونل بالا می‌آید ولی ناپایدار است** و لاگ همین را
 می‌گوید. پورت TCP تونل را در security group ابری هم باز کن.
 
@@ -155,4 +155,4 @@ throttle می‌شود و علتش چیزی است که روی *اتصال* عم
 
 ---
 
-*Last verified against Backpack v1.9.0.*
+*Last verified against upstream v1.9.0.*

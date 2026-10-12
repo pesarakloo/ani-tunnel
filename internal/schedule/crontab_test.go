@@ -9,7 +9,7 @@ import "testing"
 // readCrontab returned nil for every failure of `crontab -l`, and SetCron built
 // the new crontab from that nil — which is a crontab containing exactly one
 // line, ours. So a transient failure turned "schedule an auto-refresh" into
-// "replace this machine's crontab with a single backpack entry": the operator's
+// "replace this machine's crontab with a single ani-tunnel entry": the operator's
 // backups, their certificate renewals, their own scripts, gone, and the program
 // reporting success.
 //

@@ -149,7 +149,7 @@ func TestRestoreStagesAMergeOfTheArchiveAndWhatIsThere(t *testing.T) {
 	// Absent from the archive, so it survives only because of the seed.
 	assertStaged(t, stage, "newer-feature.json", "added by a later version")
 	// Machine-specific: the local value wins over the archived one.
-	assertStaged(t, stage, "install_path", "/root/BackPack")
+	assertStaged(t, stage, "install_path", "/root/ani-tunnel")
 
 	info, err := os.Stat(filepath.Join(stage, "certs/server.key"))
 	if err != nil {
@@ -175,24 +175,24 @@ func TestArchivedInstallPathIsUsedWhenThereIsNoLocalOne(t *testing.T) {
 	live := t.TempDir()
 	stage := t.TempDir()
 
-	archive := archiveOf(t, entry{name: "install_path", body: "/opt/backpack"})
+	archive := archiveOf(t, entry{name: "install_path", body: "/opt/ani-tunnel"})
 	if _, err := stageRestore(bytes.NewReader(archive), live, stage); err != nil {
 		t.Fatalf("staging: %v", err)
 	}
-	assertStaged(t, stage, "install_path", "/opt/backpack")
+	assertStaged(t, stage, "install_path", "/opt/ani-tunnel")
 }
 
 // The commit is the only moment the live directory changes, and it either
 // happens or it does not.
 func TestCommitSwapsTheTreeInOneStep(t *testing.T) {
 	parent := t.TempDir()
-	live := filepath.Join(parent, "backpack")
+	live := filepath.Join(parent, "ani-tunnel")
 	if err := os.Mkdir(live, 0755); err != nil {
 		t.Fatal(err)
 	}
 	writeAt(t, live, "old.toml", "the previous configuration", 0600)
 
-	stage, err := os.MkdirTemp(parent, ".backpack-restore-*")
+	stage, err := os.MkdirTemp(parent, ".ani-tunnel-restore-*")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -328,13 +328,13 @@ func archiveOf(t *testing.T, entries ...entry) []byte {
 	return buf.Bytes()
 }
 
-// liveConfigDir is a stand-in for /etc/backpack with something already in it.
+// liveConfigDir is a stand-in for /etc/ani-tunnel with something already in it.
 func liveConfigDir(t *testing.T) string {
 	t.Helper()
 	dir := t.TempDir()
 	writeAt(t, dir, "existing.toml", "the configuration that is running", 0600)
 	writeAt(t, dir, "newer-feature.json", "added by a later version", 0644)
-	writeAt(t, dir, "install_path", "/root/BackPack", 0644)
+	writeAt(t, dir, "install_path", "/root/ani-tunnel", 0644)
 	writeAt(t, dir, filepath.Join("certs", "old.crt"), "an existing certificate", 0644)
 	return dir
 }
@@ -417,9 +417,9 @@ func equalTrees(a, b map[string]string) bool {
 // not something the archive has to have an opinion about.
 func TestARestoredTunnelConfigIsNotWorldReadable(t *testing.T) {
 	for _, target := range []string{
-		"/tmp/staging/etc/backpack/iran-main.toml",
-		"etc/backpack/kharej.toml",
-		"/var/lib/backpack-restore/backpack/tunnel.toml",
+		"/tmp/staging/etc/ani-tunnel/iran-main.toml",
+		"etc/ani-tunnel/kharej.toml",
+		"/var/lib/ani-tunnel-restore/ani-tunnel/tunnel.toml",
 	} {
 		if got := restoredMode(target, 0o644); got != app.TunnelConfigMode {
 			t.Errorf("%s would be restored %#o, want %#o", target, got, app.TunnelConfigMode)
@@ -435,13 +435,13 @@ func TestEveryOtherRestoredFileKeepsItsMode(t *testing.T) {
 		archived os.FileMode
 		want     os.FileMode
 	}{
-		{"etc/backpack/webui.json", 0o600, 0o600},
-		{"etc/backpack/telegram.json", 0o600, 0o600},
-		{"etc/backpack/certs/panel.crt", 0o644, 0o644},
-		{"etc/systemd/system/backpack-iran.service", 0o644, 0o644},
+		{"etc/ani-tunnel/webui.json", 0o600, 0o600},
+		{"etc/ani-tunnel/telegram.json", 0o600, 0o600},
+		{"etc/ani-tunnel/certs/panel.crt", 0o644, 0o644},
+		{"etc/systemd/system/ani-tunnel-iran.service", 0o644, 0o644},
 		// An archive that recorded no mode at all gets 0600 rather than a
 		// guess: these files hold secrets more often than not.
-		{"etc/backpack/something", 0, 0o600},
+		{"etc/ani-tunnel/something", 0, 0o600},
 	} {
 		if got := restoredMode(tc.target, tc.archived); got != tc.want {
 			t.Errorf("%s archived %#o would be restored %#o, want %#o",

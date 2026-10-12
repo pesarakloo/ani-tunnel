@@ -18,6 +18,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/quic-go/quic-go"
 
 	"github.com/pesarakloo/ani-tunnel/internal/utils/network"
@@ -123,7 +124,7 @@ func quicConfig() *quic.Config {
 // the token can reset a connection, which is far less than the token already
 // lets them do.
 func quicResetKey(token string) *quic.StatelessResetKey {
-	sum := sha256.Sum256([]byte("backpack l3 quic stateless reset v1\x00" + token))
+	sum := sha256.Sum256([]byte(compat.L3ResetLabel + token))
 	k := quic.StatelessResetKey(sum)
 	return &k
 }

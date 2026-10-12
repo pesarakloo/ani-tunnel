@@ -86,7 +86,7 @@ func TestRestore(path string) (RestoreReport, error) {
 	// A real directory, in the system temp area, removed on the way out. The
 	// staging code writes files and checks modes, so a fake filesystem would be
 	// testing something other than what a restore does.
-	stage, err := os.MkdirTemp("", "backpack-restore-drill-")
+	stage, err := os.MkdirTemp("", "ani-tunnel-restore-drill-")
 	if err != nil {
 		return rep, fmt.Errorf("cannot make a scratch directory: %w", err)
 	}
@@ -95,7 +95,7 @@ func TestRestore(path string) (RestoreReport, error) {
 	// Seeded from an empty directory rather than the live one: the question is
 	// what the *archive* holds, and seeding from the machine would report this
 	// machine's tunnels as though the backup contained them.
-	empty, err := os.MkdirTemp("", "backpack-restore-empty-")
+	empty, err := os.MkdirTemp("", "ani-tunnel-restore-empty-")
 	if err != nil {
 		return rep, fmt.Errorf("cannot make a scratch directory: %w", err)
 	}
@@ -152,4 +152,4 @@ func TestRestore(path string) (RestoreReport, error) {
 
 // DefaultBackupDir is where the drill looks when the operator does not name a
 // file. Exported so the menu and the panel agree.
-const DefaultBackupDir = app.BackupDir
+var DefaultBackupDir = app.BackupDir

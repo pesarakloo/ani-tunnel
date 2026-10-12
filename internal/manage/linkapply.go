@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/pesarakloo/ani-tunnel/internal/app"
+	"github.com/pesarakloo/ani-tunnel/internal/compat"
 	"github.com/pesarakloo/ani-tunnel/internal/optimize"
 )
 
@@ -48,7 +49,7 @@ type LinkApplied struct {
 
 // ErrLinkNeedsHost is a link that does not say where the Iran server is.
 var ErrLinkNeedsHost = errors.New("the setup link does not say where the Iran server is — " +
-	"give its address with --host (ani-tunnel link apply --host 1.2.3.4 'backpack://…')")
+	"give its address with --host (ani-tunnel link apply --host 1.2.3.4 'ani-tunnel://…')")
 
 // linkChars is what a setup link is made of after its scheme.
 var linkChars = regexp.MustCompile(`^[A-Za-z0-9_\-=.]+`)
@@ -60,17 +61,18 @@ var linkChars = regexp.MustCompile(`^[A-Za-z0-9_\-=.]+`)
 // Pieces after a break are joined on only while the link does not decode yet,
 // so the word after a whole link is never taken for the rest of it.
 func FindSetupLink(text string) string {
-	i := strings.Index(text, "backpack://")
+	text = compat.NormalizeLink(text)
+	i := strings.Index(text, "ani-tunnel://")
 	if i < 0 {
 		return strings.TrimSpace(text)
 	}
 	var pieces []string
 	for _, f := range strings.Fields(text[i:]) {
-		p := linkChars.FindString(strings.TrimPrefix(f, "backpack://"))
+		p := linkChars.FindString(strings.TrimPrefix(f, "ani-tunnel://"))
 		if len(pieces) == 0 {
-			p = "backpack://" + p
+			p = "ani-tunnel://" + p
 		}
-		if p == "" || p == "backpack://" {
+		if p == "" || p == "ani-tunnel://" {
 			break
 		}
 		pieces = append(pieces, strings.TrimRight(p, "."))

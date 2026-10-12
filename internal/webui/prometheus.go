@@ -30,26 +30,26 @@ func (s *server) handlePrometheus(w http.ResponseWriter, r *http.Request) {
 	writePanelMetrics(&b)
 
 	m := sysstat.Get()
-	gauge(&b, "backpack_cpu_percent", "CPU usage percent", m.CPUPercent)
-	gauge(&b, "backpack_mem_percent", "Memory usage percent", m.MemPercent)
-	gauge(&b, "backpack_swap_percent", "Swap usage percent", m.SwapPercent)
-	gauge(&b, "backpack_disk_percent", "Disk usage percent", m.DiskPercent)
-	gauge(&b, "backpack_uptime_seconds", "System uptime in seconds", m.Uptime.Seconds())
-	gauge(&b, "backpack_monitor_running", "1 when the backpack-monitor service is active",
+	gauge(&b, "ani_tunnel_cpu_percent", "CPU usage percent", m.CPUPercent)
+	gauge(&b, "ani_tunnel_mem_percent", "Memory usage percent", m.MemPercent)
+	gauge(&b, "ani_tunnel_swap_percent", "Swap usage percent", m.SwapPercent)
+	gauge(&b, "ani_tunnel_disk_percent", "Disk usage percent", m.DiskPercent)
+	gauge(&b, "ani_tunnel_uptime_seconds", "System uptime in seconds", m.Uptime.Seconds())
+	gauge(&b, "ani_tunnel_monitor_running", "1 when the ani-tunnel-monitor service is active",
 		boolVal(manage.MonitorRunning()))
 
 	tunnels := manage.List()
 	health := manage.AllHealth()
 
-	b.WriteString("# HELP backpack_tunnel_up 1 when the tunnel's peer is connected\n# TYPE backpack_tunnel_up gauge\n")
+	b.WriteString("# HELP ani_tunnel_tunnel_up 1 when the tunnel's peer is connected\n# TYPE ani_tunnel_tunnel_up gauge\n")
 	for _, t := range tunnels {
 		up := health[t.Name].State == "online"
-		fmt.Fprintf(&b, "backpack_tunnel_up{name=%q,transport=%q,role=%q} %d\n",
+		fmt.Fprintf(&b, "ani_tunnel_tunnel_up{name=%q,transport=%q,role=%q} %d\n",
 			t.Name, t.Transport, t.Role, int(boolVal(up)))
 	}
 
-	counterHead(&b, "backpack_tunnel_bytes_in_total", "Bytes received over the tunnel")
-	counterHead(&b, "backpack_tunnel_bytes_out_total", "Bytes sent over the tunnel")
+	counterHead(&b, "ani_tunnel_tunnel_bytes_in_total", "Bytes received over the tunnel")
+	counterHead(&b, "ani_tunnel_tunnel_bytes_out_total", "Bytes sent over the tunnel")
 	// What each tunnel's process is holding. These are the counters a leak
 	// shows up in first — see internal/metrics/runtime.go — and the reason they
 	// are here rather than left to a profiler is that nobody attaches a
@@ -64,8 +64,8 @@ func (s *server) handlePrometheus(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			continue
 		}
-		fmt.Fprintf(&b, "backpack_tunnel_bytes_in_total{name=%q} %d\n", t.Name, snap.BytesIn)
-		fmt.Fprintf(&b, "backpack_tunnel_bytes_out_total{name=%q} %d\n", t.Name, snap.BytesOut)
+		fmt.Fprintf(&b, "ani_tunnel_tunnel_bytes_in_total{name=%q} %d\n", t.Name, snap.BytesIn)
+		fmt.Fprintf(&b, "ani_tunnel_tunnel_bytes_out_total{name=%q} %d\n", t.Name, snap.BytesOut)
 		if snap.Runtime != nil {
 			runtimeSnaps = append(runtimeSnaps, struct {
 				name string
@@ -98,33 +98,33 @@ func (s *server) handlePrometheus(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if any {
-			gaugeHead(&b, "backpack_tunnel_uptime_percent",
+			gaugeHead(&b, "ani_tunnel_tunnel_uptime_percent",
 				"Percentage of health checks in the last 7 days that saw the tunnel up")
-			gaugeHead(&b, "backpack_tunnel_uptime_checks",
+			gaugeHead(&b, "ani_tunnel_tunnel_uptime_checks",
 				"How many health checks that percentage rests on")
 			for _, t := range tunnels {
 				pct, checks, ok := tunhist.UptimeOf(t.Name, 7*24*time.Hour)
 				if !ok {
 					continue
 				}
-				fmt.Fprintf(&b, "backpack_tunnel_uptime_percent{name=%q} %.4f\n", t.Name, pct)
-				fmt.Fprintf(&b, "backpack_tunnel_uptime_checks{name=%q} %d\n", t.Name, checks)
+				fmt.Fprintf(&b, "ani_tunnel_tunnel_uptime_percent{name=%q} %.4f\n", t.Name, pct)
+				fmt.Fprintf(&b, "ani_tunnel_tunnel_uptime_checks{name=%q} %d\n", t.Name, checks)
 			}
 		}
 	}
 
 	if len(runtimeSnaps) > 0 {
-		gaugeHead(&b, "backpack_tunnel_goroutines", "Goroutines held by the tunnel process")
-		gaugeHead(&b, "backpack_tunnel_open_files", "File descriptors held by the tunnel process")
-		gaugeHead(&b, "backpack_tunnel_heap_bytes", "Heap bytes in use by the tunnel process")
-		gaugeHead(&b, "backpack_tunnel_heap_objects", "Live heap objects in the tunnel process")
+		gaugeHead(&b, "ani_tunnel_tunnel_goroutines", "Goroutines held by the tunnel process")
+		gaugeHead(&b, "ani_tunnel_tunnel_open_files", "File descriptors held by the tunnel process")
+		gaugeHead(&b, "ani_tunnel_tunnel_heap_bytes", "Heap bytes in use by the tunnel process")
+		gaugeHead(&b, "ani_tunnel_tunnel_heap_objects", "Live heap objects in the tunnel process")
 		for _, r := range runtimeSnaps {
-			fmt.Fprintf(&b, "backpack_tunnel_goroutines{name=%q} %d\n", r.name, r.rs.Goroutines)
+			fmt.Fprintf(&b, "ani_tunnel_tunnel_goroutines{name=%q} %d\n", r.name, r.rs.Goroutines)
 			if r.rs.OpenFiles > 0 {
-				fmt.Fprintf(&b, "backpack_tunnel_open_files{name=%q} %d\n", r.name, r.rs.OpenFiles)
+				fmt.Fprintf(&b, "ani_tunnel_tunnel_open_files{name=%q} %d\n", r.name, r.rs.OpenFiles)
 			}
-			fmt.Fprintf(&b, "backpack_tunnel_heap_bytes{name=%q} %d\n", r.name, r.rs.HeapBytes)
-			fmt.Fprintf(&b, "backpack_tunnel_heap_objects{name=%q} %d\n", r.name, r.rs.HeapObjects)
+			fmt.Fprintf(&b, "ani_tunnel_tunnel_heap_bytes{name=%q} %d\n", r.name, r.rs.HeapBytes)
+			fmt.Fprintf(&b, "ani_tunnel_tunnel_heap_objects{name=%q} %d\n", r.name, r.rs.HeapObjects)
 		}
 	}
 
@@ -133,9 +133,9 @@ func (s *server) handlePrometheus(w http.ResponseWriter, r *http.Request) {
 			metric, help string
 			val          func(*metrics.KCPStats) uint64
 		}{
-			{"backpack_kcp_retransmitted_total", "KCP segments sent again", func(k *metrics.KCPStats) uint64 { return k.Retransmitted }},
-			{"backpack_kcp_lost_total", "KCP segments that never arrived", func(k *metrics.KCPStats) uint64 { return k.Lost }},
-			{"backpack_kcp_fec_recovered_total", "Packets rebuilt by forward error correction", func(k *metrics.KCPStats) uint64 { return k.FECRecovered }},
+			{"ani_tunnel_kcp_retransmitted_total", "KCP segments sent again", func(k *metrics.KCPStats) uint64 { return k.Retransmitted }},
+			{"ani_tunnel_kcp_lost_total", "KCP segments that never arrived", func(k *metrics.KCPStats) uint64 { return k.Lost }},
+			{"ani_tunnel_kcp_fec_recovered_total", "Packets rebuilt by forward error correction", func(k *metrics.KCPStats) uint64 { return k.FECRecovered }},
 		} {
 			counterHead(&b, c.metric, c.help)
 			for _, snap := range kcpSnaps {
