@@ -2,10 +2,9 @@
 
 ## v1.9.2
 
-- Use ani tunnel throughout commands, installation paths, service names, the panel and documentation.
-- Bring the English and Persian installation guides in line with the original project.
+- Improve the English and Persian installation and quick-start guides.
 - Accept older setup links, release archives and backups, and retain existing installation paths during upgrades.
-- Publish the `ani-tunnel` executable while keeping previous updaters compatible.
+- Keep release packages compatible with existing updaters.
 
 ## v1.9.1 — 2026-10-11
 
@@ -13,8 +12,7 @@
 - Release old TCP/WS data sockets and connection quota on client loss or replacement.
 - Bind pool ownership at admission and reject late WebSocket requests from replaced clients.
 - Add periodic RTT liveness checks for TCP and WS/WSS control channels.
-- Brand the UI, terminal, icons and Telegram messages as ani tunnel / @xray_chrome.
-- Point installation, updates and support at pesarakloo/ani-tunnel.
+- Improve installation, update and support links.
 - Stage installations, back up configuration and binary, preserve active services, and restore the previous binary if service restart fails.
 - Keep existing configuration paths and wire identifiers compatible.
 
